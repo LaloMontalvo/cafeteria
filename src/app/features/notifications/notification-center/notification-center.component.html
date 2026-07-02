@@ -1,0 +1,39 @@
+<app-header pageTitle="Notificaciones" pageIcon="notifications" pageSubtitle="Centro de alertas y avisos"></app-header>
+
+<div class="page-content">
+  <div class="notif-toolbar">
+    <span class="notif-count">{{ notifService.unreadCount() }} sin leer</span>
+    <button class="mark-all-btn" (click)="markAllAsRead()">
+      <span class="material-icons-round">done_all</span> Marcar todas como leídas
+    </button>
+  </div>
+
+  <div class="notif-list">
+    <div class="notif-card" *ngFor="let n of notifications"
+         [class.unread]="!n.read"
+         (click)="markAsRead(n.id)">
+      <div class="notif-icon" [style.background]="getIconColor(n.type) + '14'" [style.color]="getIconColor(n.type)">
+        <span class="material-icons-round">{{ getIcon(n.type) }}</span>
+      </div>
+      <div class="notif-body">
+        <div class="notif-header-row">
+          <span class="notif-title">{{ n.title }}</span>
+          <span class="notif-time">{{ getTimeAgo(n.createdAt) }}</span>
+        </div>
+        <p class="notif-message">{{ n.message }}</p>
+        <div class="notif-meta" *ngIf="n.tableNumber">
+          <span class="material-icons-round">table_restaurant</span>
+          Mesa {{ n.tableNumber }}
+        </div>
+      </div>
+      <button class="notif-delete" (click)="deleteNotif(n.id); $event.stopPropagation()" title="Eliminar">
+        <span class="material-icons-round">close</span>
+      </button>
+    </div>
+
+    <div class="empty-state" *ngIf="notifications.length === 0">
+      <span class="material-icons-round">notifications_off</span>
+      <p>No hay notificaciones</p>
+    </div>
+  </div>
+</div>

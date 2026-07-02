@@ -1,0 +1,132 @@
+<app-header pageTitle="Dashboard" pageIcon="dashboard" pageSubtitle="Resumen general de tu cafetería"></app-header>
+
+<div class="dashboard-content">
+  <!-- Stat Cards -->
+  <div class="stats-grid">
+    <app-stat-card
+      icon="payments"
+      [value]="'$' + todaySales.toLocaleString()"
+      label="Ventas de hoy"
+      accentColor="#4CAF50"
+      trend="+12%"
+      [trendPositive]="true">
+    </app-stat-card>
+
+    <app-stat-card
+      icon="receipt_long"
+      [value]="activeOrders"
+      label="Órdenes activas"
+      accentColor="#2196F3">
+    </app-stat-card>
+
+    <app-stat-card
+      icon="table_restaurant"
+      [value]="occupiedTables + '/' + tableService.totalTables()"
+      label="Mesas ocupadas"
+      accentColor="#FF9800">
+    </app-stat-card>
+
+    <app-stat-card
+      icon="restaurant_menu"
+      [value]="totalProducts"
+      label="Productos activos"
+      accentColor="#6F4E37">
+    </app-stat-card>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row">
+    <!-- Sales Chart -->
+    <div class="chart-card sales-chart">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-title">Ventas de la semana</h3>
+          <p class="chart-subtitle">Últimos 7 días</p>
+        </div>
+        <div class="chart-total">
+          <span class="total-value">${{ reportService.getWeekTotal().toLocaleString() }}</span>
+          <span class="total-label">Total semanal</span>
+        </div>
+      </div>
+      <div class="chart-body">
+        <canvas baseChart
+          [datasets]="salesChartData.datasets"
+          [labels]="salesChartData.labels"
+          [options]="salesChartOptions"
+          type="line">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Category Chart -->
+    <div class="chart-card category-chart">
+      <div class="chart-header">
+        <div>
+          <h3 class="chart-title">Ventas por categoría</h3>
+          <p class="chart-subtitle">Distribución de ingresos</p>
+        </div>
+      </div>
+      <div class="chart-body doughnut-body">
+        <canvas baseChart
+          [datasets]="categoryChartData.datasets"
+          [labels]="categoryChartData.labels"
+          [options]="categoryChartOptions"
+          type="doughnut">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Row -->
+  <div class="bottom-row">
+    <!-- Recent Orders -->
+    <div class="card recent-orders-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="material-icons-round">receipt_long</span>
+          Órdenes recientes
+        </h3>
+        <a routerLink="/orders" class="view-all-link">Ver todas →</a>
+      </div>
+      <div class="orders-list">
+        <div class="order-row" *ngFor="let order of orderService.allOrders().slice(0, 5)">
+          <div class="order-info">
+            <span class="order-table">Mesa {{ order.tableNumber }}</span>
+            <span class="order-waiter">{{ order.waiterName }}</span>
+          </div>
+          <div class="order-items-count">
+            {{ order.items.length }} producto{{ order.items.length > 1 ? 's' : '' }}
+          </div>
+          <span class="order-status-badge" [style.background]="getOrderStatusColor(order.status) + '18'" [style.color]="getOrderStatusColor(order.status)">
+            {{ getStatusLabel(order.status) }}
+          </span>
+          <span class="order-time">
+            <span class="material-icons-round">schedule</span>
+            {{ getMinutesAgo(order.createdAt) }} min
+          </span>
+          <span class="order-total">${{ order.total.toLocaleString() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="card top-products-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="material-icons-round">trending_up</span>
+          Productos más vendidos
+        </h3>
+      </div>
+      <div class="top-products-list">
+        <div class="top-product-item" *ngFor="let product of topProducts; let i = index">
+          <span class="product-rank">#{{ i + 1 }}</span>
+          <div class="product-info">
+            <span class="product-name">{{ product.name }}</span>
+            <span class="product-count">{{ product.count }} vendidos</span>
+          </div>
+          <span class="product-revenue">${{ product.revenue.toLocaleString() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

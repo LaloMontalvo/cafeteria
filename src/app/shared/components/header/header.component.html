@@ -1,0 +1,60 @@
+<header class="page-header">
+  <div class="header-left">
+    <div class="page-title-section">
+      <div class="page-title-row">
+        <span class="material-icons-round page-icon" *ngIf="pageIcon">{{ pageIcon }}</span>
+        <h1 class="page-title">{{ pageTitle }}</h1>
+      </div>
+      <p class="page-subtitle" *ngIf="pageSubtitle">{{ pageSubtitle }}</p>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <span class="header-date">{{ currentDate }}</span>
+
+    <!-- Notification Bell -->
+    <div class="notif-wrapper">
+      <button class="notif-bell" (click)="toggleNotifDropdown()" aria-label="Notificaciones">
+        <span class="material-icons-round">notifications</span>
+        <span class="notif-badge" *ngIf="notifService.unreadCount() > 0">
+          {{ notifService.unreadCount() }}
+        </span>
+      </button>
+
+      <!-- Dropdown -->
+      <div class="notif-dropdown" *ngIf="showNotifDropdown">
+        <div class="notif-dropdown-header">
+          <span>Notificaciones</span>
+          <button class="mark-read-btn" (click)="notifService.markAllAsRead()">Marcar todo</button>
+        </div>
+        <div class="notif-dropdown-body">
+          <div *ngFor="let n of notifService.allNotifications().slice(0, 5)"
+               class="notif-item" [class.unread]="!n.read"
+               (click)="notifService.markAsRead(n.id)">
+            <span class="material-icons-round notif-type-icon"
+                  [ngClass]="{
+                    'order-ready': n.type === 'order_ready',
+                    'new-order': n.type === 'new_order',
+                    'payment': n.type === 'payment',
+                    'system': n.type === 'system'
+                  }">
+              {{ n.type === 'order_ready' ? 'check_circle' :
+                 n.type === 'new_order' ? 'receipt_long' :
+                 n.type === 'payment' ? 'payments' : 'info' }}
+            </span>
+            <div class="notif-content">
+              <span class="notif-title">{{ n.title }}</span>
+              <span class="notif-msg">{{ n.message }}</span>
+            </div>
+          </div>
+          <div class="notif-empty" *ngIf="notifService.allNotifications().length === 0">
+            Sin notificaciones
+          </div>
+        </div>
+        <button class="notif-dropdown-footer" (click)="goToNotifications()">
+          Ver todas las notificaciones
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

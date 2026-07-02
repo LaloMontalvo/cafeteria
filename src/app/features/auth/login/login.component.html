@@ -1,0 +1,112 @@
+<div class="login-page">
+  <!-- Decorative Background -->
+  <div class="login-bg">
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
+    <div class="bg-circle bg-circle-3"></div>
+  </div>
+
+  <div class="login-container">
+    <!-- Left Side - Branding -->
+    <div class="login-branding">
+      <div class="branding-content">
+        <span class="material-icons-round branding-icon">coffee</span>
+        <h1 class="branding-title">Café Aroma</h1>
+        <p class="branding-subtitle">Sistema de gestión integral para tu cafetería</p>
+        <div class="branding-features">
+          <div class="feature-item">
+            <span class="material-icons-round">table_restaurant</span>
+            <span>Control de mesas</span>
+          </div>
+          <div class="feature-item">
+            <span class="material-icons-round">receipt_long</span>
+            <span>Gestión de pedidos</span>
+          </div>
+          <div class="feature-item">
+            <span class="material-icons-round">bar_chart</span>
+            <span>Reportes en tiempo real</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Form -->
+    <div class="login-form-section">
+      <div class="login-form-wrapper">
+        <div class="form-header">
+          <h2>Bienvenido de vuelta</h2>
+          <p>Ingresa tus credenciales para continuar</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="login-form">
+          <!-- Error Message -->
+          <div class="error-banner" *ngIf="errorMessage">
+            <span class="material-icons-round">error_outline</span>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <div class="input-wrapper">
+              <span class="material-icons-round input-icon">mail</span>
+              <input
+                type="email"
+                id="email"
+                [(ngModel)]="email"
+                name="email"
+                placeholder="tu@correo.com"
+                autocomplete="email"
+                required />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <div class="input-wrapper">
+              <span class="material-icons-round input-icon">lock</span>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                [(ngModel)]="password"
+                name="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required />
+              <button type="button" class="password-toggle" (click)="togglePassword()">
+                <span class="material-icons-round">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="login-btn" [disabled]="loading">
+            <span class="btn-loader" *ngIf="loading"></span>
+            <span *ngIf="!loading">Iniciar Sesión</span>
+            <span *ngIf="loading">Ingresando...</span>
+          </button>
+        </form>
+
+        <!-- Demo Credentials -->
+        <div class="demo-credentials">
+          <p class="demo-title">Credenciales de prueba:</p>
+          <div class="demo-grid">
+            <div class="demo-item" (click)="email = 'admin@cafe.com'; password = 'admin123'">
+              <span class="demo-role">Admin</span>
+              <span class="demo-email">admin&#64;cafe.com</span>
+            </div>
+            <div class="demo-item" (click)="email = 'maria@cafe.com'; password = 'mesero123'">
+              <span class="demo-role">Mesero</span>
+              <span class="demo-email">maria&#64;cafe.com</span>
+            </div>
+            <div class="demo-item" (click)="email = 'ana@cafe.com'; password = 'cocina123'">
+              <span class="demo-role">Cocina</span>
+              <span class="demo-email">ana&#64;cafe.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

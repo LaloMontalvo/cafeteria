@@ -1,0 +1,141 @@
+<app-header pageTitle="Mesas" pageIcon="table_restaurant" pageSubtitle="Gestión y estado de mesas"></app-header>
+
+<div class="page-content">
+  <!-- Stats -->
+  <div class="stats-grid">
+    <app-stat-card icon="check_circle" [value]="tableService.availableCount()" label="Disponibles" accentColor="#4CAF50"></app-stat-card>
+    <app-stat-card icon="groups" [value]="tableService.occupiedCount()" label="Ocupadas" accentColor="#E53935"></app-stat-card>
+    <app-stat-card icon="event_seat" [value]="tableService.reservedCount()" label="Reservadas" accentColor="#FF9800"></app-stat-card>
+    <app-stat-card icon="receipt" [value]="tableService.billingCount()" label="En cuenta" accentColor="#2196F3"></app-stat-card>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="zone-tabs">
+        <button class="zone-tab" [class.active]="selectedZone === ''" (click)="selectedZone = ''">Todas</button>
+        <button class="zone-tab" *ngFor="let zone of tableService.getZones()" [class.active]="selectedZone === zone" (click)="selectedZone = zone">{{ zone }}</button>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="openCreateModal()">
+      <span class="material-icons-round">add</span> Nueva Mesa
+    </button>
+  </div>
+
+  <div class="tables-layout" [class.has-detail]="selectedTable">
+    <!-- Tables Grid -->
+    <div class="tables-grid">
+      <div class="table-card" *ngFor="let table of filteredTables"
+           [class.selected]="selectedTable?.id === table.id"
+           [style.--status-color]="getStatusColor(table.status)"
+           (click)="selectTable(table)">
+        <div class="table-status-dot" [style.background]="getStatusColor(table.status)"></div>
+        <div class="table-number">{{ table.number }}</div>
+        <div class="table-icon">
+          <span class="material-icons-round">table_restaurant</span>
+        </div>
+        <div class="table-info">
+          <span class="table-capacity">
+            <span class="material-icons-round">person</span> {{ table.capacity }}
+          </span>
+          <span class="table-zone">{{ table.zone }}</span>
+        </div>
+        <span class="table-status-label" [style.color]="getStatusColor(table.status)">
+          {{ getStatusLabel(table.status) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Table Detail Panel -->
+    <div class="table-detail-panel" *ngIf="selectedTable">
+      <div class="detail-header">
+        <h3>Mesa {{ selectedTable.number }}</h3>
+        <div class="detail-actions">
+          <button class="icon-btn" (click)="openEditModal(selectedTable)" title="Editar">
+            <span class="material-icons-round">edit</span>
+          </button>
+          <button class="icon-btn danger" (click)="deleteTable(selectedTable.id)" title="Eliminar">
+            <span class="material-icons-round">delete</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="detail-info-grid">
+        <div class="detail-info-item">
+          <span class="info-label">Estado</span>
+          <span class="info-value" [style.color]="getStatusColor(selectedTable.status)">
+            {{ getStatusLabel(selectedTable.status) }}
+          </span>
+        </div>
+        <div class="detail-info-item">
+          <span class="info-label">Capacidad</span>
+          <span class="info-value">{{ selectedTable.capacity }} personas</span>
+        </div>
+        <div class="detail-info-item">
+          <span class="info-label">Zona</span>
+          <span class="info-value">{{ selectedTable.zone }}</span>
+        </div>
+      </div>
+
+      <div class="status-actions">
+        <span class="section-title">Cambiar estado:</span>
+        <div class="status-buttons">
+          <button class="status-btn" [class.active]="selectedTable.status === 'available'" (click)="changeStatus(selectedTable, 'available')" style="--btn-color: #4CAF50">Disponible</button>
+          <button class="status-btn" [class.active]="selectedTable.status === 'occupied'" (click)="changeStatus(selectedTable, 'occupied')" style="--btn-color: #E53935">Ocupada</button>
+          <button class="status-btn" [class.active]="selectedTable.status === 'reserved'" (click)="changeStatus(selectedTable, 'reserved')" style="--btn-color: #FF9800">Reservada</button>
+          <button class="status-btn" [class.active]="selectedTable.status === 'billing'" (click)="changeStatus(selectedTable, 'billing')" style="--btn-color: #2196F3">En cuenta</button>
+        </div>
+      </div>
+
+      <!-- Table Orders -->
+      <div class="table-orders" *ngIf="getTableOrders(selectedTable.id).length > 0">
+        <span class="section-title">Pedidos activos:</span>
+        <div class="mini-order" *ngFor="let order of getTableOrders(selectedTable.id)">
+          <div class="mini-order-info">
+            <span class="mini-order-id">{{ order.id }}</span>
+            <span class="mini-order-items">{{ order.items.length }} productos</span>
+          </div>
+          <span class="mini-order-total">${{ order.total }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ editingTable ? 'Editar Mesa' : 'Nueva Mesa' }}</h3>
+      <button class="modal-close" (click)="closeModal()">
+        <span class="material-icons-round">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Número de mesa</label>
+          <input type="number" [(ngModel)]="formNumber" min="1" />
+        </div>
+        <div class="form-group">
+          <label>Capacidad</label>
+          <input type="number" [(ngModel)]="formCapacity" min="1" max="20" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Zona</label>
+        <select [(ngModel)]="formZone">
+          <option value="Interior">Interior</option>
+          <option value="Terraza">Terraza</option>
+          <option value="VIP">VIP</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
+      <button class="btn-primary" (click)="saveTable()">
+        {{ editingTable ? 'Guardar' : 'Crear mesa' }}
+      </button>
+    </div>
+  </div>
+</div>

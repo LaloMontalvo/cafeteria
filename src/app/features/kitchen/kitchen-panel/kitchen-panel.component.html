@@ -1,0 +1,84 @@
+<app-header pageTitle="Cocina" pageIcon="soup_kitchen" pageSubtitle="Panel de pedidos en tiempo real"></app-header>
+
+<div class="kitchen-content">
+  <!-- Filter Tabs -->
+  <div class="kitchen-tabs">
+    <button class="k-tab" [class.active]="filterStatus === 'all'" (click)="filterStatus = 'all'">
+      <span class="material-icons-round">list</span> Todos
+    </button>
+    <button class="k-tab pending" [class.active]="filterStatus === 'pending'" (click)="filterStatus = 'pending'">
+      <span class="material-icons-round">pending</span> Pendientes
+      <span class="k-badge">{{ orderService.pendingOrders().length }}</span>
+    </button>
+    <button class="k-tab preparing" [class.active]="filterStatus === 'preparing'" (click)="filterStatus = 'preparing'">
+      <span class="material-icons-round">skillet</span> En preparación
+      <span class="k-badge">{{ orderService.preparingOrders().length }}</span>
+    </button>
+    <button class="k-tab ready" [class.active]="filterStatus === 'ready'" (click)="filterStatus = 'ready'">
+      <span class="material-icons-round">check_circle</span> Listos
+      <span class="k-badge">{{ orderService.readyOrders().length }}</span>
+    </button>
+  </div>
+
+  <!-- Orders Grid - Large Cards for Kitchen -->
+  <div class="kitchen-grid">
+    <div class="kitchen-card" *ngFor="let order of filteredOrders"
+         [class.pending]="order.status === 'pending'"
+         [class.preparing]="order.status === 'preparing'"
+         [class.ready]="order.status === 'ready'">
+
+      <!-- Card Header -->
+      <div class="kc-header">
+        <div class="kc-table">
+          <span class="material-icons-round">table_restaurant</span>
+          Mesa {{ order.tableNumber }}
+        </div>
+        <div class="kc-time" [ngClass]="getTimeClass(order.createdAt)">
+          <span class="material-icons-round">timer</span>
+          {{ getMinutesAgo(order.createdAt) }} min
+        </div>
+      </div>
+
+      <!-- Waiter Info -->
+      <div class="kc-waiter">
+        <span class="material-icons-round">person</span>
+        {{ order.waiterName }}
+      </div>
+
+      <!-- Status Badge -->
+      <div class="kc-status" [style.background]="getStatusColor(order.status) + '18'" [style.color]="getStatusColor(order.status)">
+        {{ getStatusLabel(order.status) }}
+      </div>
+
+      <!-- Items List -->
+      <div class="kc-items">
+        <div class="kc-item" *ngFor="let item of order.items">
+          <span class="kc-qty">{{ item.quantity }}x</span>
+          <div class="kc-item-info">
+            <span class="kc-item-name">{{ item.productName }}</span>
+            <span class="kc-item-notes" *ngIf="item.notes">⚠️ {{ item.notes }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- General Notes -->
+      <div class="kc-notes" *ngIf="order.notes">
+        <span class="material-icons-round">note</span>
+        {{ order.notes }}
+      </div>
+
+      <!-- Action Button -->
+      <button class="kc-action-btn" (click)="advanceStatus(order)" *ngIf="order.status !== 'delivered'"
+              [style.background]="getStatusColor(order.status === 'pending' ? 'preparing' : order.status === 'preparing' ? 'ready' : 'delivered')">
+        <span class="material-icons-round">{{ getNextStatusIcon(order.status) }}</span>
+        {{ getNextStatusLabel(order.status) }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="kitchen-empty" *ngIf="filteredOrders.length === 0">
+    <span class="material-icons-round">restaurant</span>
+    <p>No hay pedidos en este estado</p>
+  </div>
+</div>

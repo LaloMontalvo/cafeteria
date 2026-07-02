@@ -1,0 +1,73 @@
+<app-header pageTitle="Reportes" pageIcon="bar_chart" pageSubtitle="Análisis de ventas y rendimiento"></app-header>
+
+<div class="page-content">
+  <!-- Stats -->
+  <div class="stats-grid">
+    <app-stat-card icon="payments" [value]="'$' + todaySales.toLocaleString()" label="Ventas de hoy" accentColor="#4CAF50" trend="+12%" [trendPositive]="true"></app-stat-card>
+    <app-stat-card icon="date_range" [value]="'$' + weekTotal.toLocaleString()" label="Total semanal" accentColor="#6F4E37"></app-stat-card>
+    <app-stat-card icon="receipt" [value]="weekOrders" label="Órdenes esta semana" accentColor="#2196F3"></app-stat-card>
+    <app-stat-card icon="analytics" [value]="'$' + avgTicket.toFixed(0)" label="Ticket promedio" accentColor="#FF9800"></app-stat-card>
+  </div>
+
+  <!-- Bar Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3>Ventas y órdenes por día</h3>
+    </div>
+    <div class="chart-body">
+      <canvas baseChart [datasets]="barChartData.datasets" [labels]="barChartData.labels" [options]="barChartOptions" type="bar"></canvas>
+    </div>
+  </div>
+
+  <div class="report-grid">
+    <!-- Top Products -->
+    <div class="report-card">
+      <h3 class="report-title"><span class="material-icons-round">trending_up</span> Productos más vendidos</h3>
+      <div class="report-list">
+        <div class="report-item" *ngFor="let p of topProducts; let i = index">
+          <span class="report-rank">#{{ i + 1 }}</span>
+          <div class="report-item-info">
+            <span class="report-item-name">{{ p.name }}</span>
+            <span class="report-item-sub">{{ p.count }} vendidos</span>
+          </div>
+          <span class="report-item-value">${{ p.revenue.toLocaleString() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue by Category -->
+    <div class="report-card">
+      <h3 class="report-title"><span class="material-icons-round">category</span> Ingresos por categoría</h3>
+      <div class="report-list">
+        <div class="report-item" *ngFor="let c of catRevenue">
+          <div class="report-item-info">
+            <span class="report-item-name">{{ c.category }}</span>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="(c.revenue / catRevenue[0].revenue) * 100"></div>
+            </div>
+          </div>
+          <span class="report-item-value">${{ c.revenue.toLocaleString() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Closed Accounts -->
+    <div class="report-card full-width">
+      <h3 class="report-title"><span class="material-icons-round">receipt_long</span> Historial de cuentas cerradas</h3>
+      <table class="history-table">
+        <thead><tr><th>Mesa</th><th>Mesero</th><th>Subtotal</th><th>IVA</th><th>Propina</th><th>Total</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let acc of reportService.getClosedAccounts()">
+            <td>Mesa {{ acc.tableNumber }}</td>
+            <td>{{ acc.waiterName }}</td>
+            <td>${{ acc.subtotal }}</td>
+            <td>${{ acc.tax }}</td>
+            <td>${{ acc.tip }}</td>
+            <td class="total-cell">${{ acc.total }}</td>
+            <td><span class="paid-badge">Pagada</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

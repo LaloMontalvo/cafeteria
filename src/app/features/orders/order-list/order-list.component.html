@@ -1,0 +1,102 @@
+<app-header pageTitle="Órdenes" pageIcon="receipt_long" pageSubtitle="Todas las órdenes del día"></app-header>
+
+<div class="page-content">
+  <!-- Status Filter Tabs -->
+  <div class="status-tabs">
+    <button *ngFor="let s of statuses" class="status-tab" [class.active]="filterStatus === s.value" (click)="filterStatus = s.value" [style.--tab-color]="s.color">
+      {{ s.label }}
+      <span class="tab-count" *ngIf="s.value === ''">{{ orderService.allOrders().length }}</span>
+      <span class="tab-count" *ngIf="s.value === 'pending'">{{ orderService.pendingOrders().length }}</span>
+      <span class="tab-count" *ngIf="s.value === 'preparing'">{{ orderService.preparingOrders().length }}</span>
+      <span class="tab-count" *ngIf="s.value === 'ready'">{{ orderService.readyOrders().length }}</span>
+      <span class="tab-count" *ngIf="s.value === 'delivered'">{{ orderService.deliveredOrders().length }}</span>
+    </button>
+  </div>
+
+  <div class="orders-layout" [class.has-detail]="selectedOrder">
+    <!-- Orders Table -->
+    <div class="orders-table-wrapper">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Mesa</th>
+            <th>Mesero</th>
+            <th>Productos</th>
+            <th>Estado</th>
+            <th>Tiempo</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of filteredOrders" class="order-row" [class.selected]="selectedOrder?.id === order.id" (click)="selectOrder(order)">
+            <td><span class="table-badge">Mesa {{ order.tableNumber }}</span></td>
+            <td>{{ order.waiterName }}</td>
+            <td>{{ order.items.length }} producto{{ order.items.length > 1 ? 's' : '' }}</td>
+            <td>
+              <span class="status-badge" [style.background]="getStatusColor(order.status) + '18'" [style.color]="getStatusColor(order.status)">
+                {{ getStatusLabel(order.status) }}
+              </span>
+            </td>
+            <td class="time-cell">
+              <span class="material-icons-round">schedule</span>
+              {{ getMinutesAgo(order.createdAt) }} min
+            </td>
+            <td class="total-cell">${{ order.total.toLocaleString() }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty-state" *ngIf="filteredOrders.length === 0">
+        <span class="material-icons-round">inbox</span>
+        <p>No hay órdenes con este estado</p>
+      </div>
+    </div>
+
+    <!-- Order Detail -->
+    <div class="order-detail" *ngIf="selectedOrder">
+      <div class="detail-header">
+        <h3>Orden {{ selectedOrder.id }}</h3>
+        <span class="status-badge large" [style.background]="getStatusColor(selectedOrder.status) + '18'" [style.color]="getStatusColor(selectedOrder.status)">
+          {{ getStatusLabel(selectedOrder.status) }}
+        </span>
+      </div>
+
+      <div class="detail-meta">
+        <div class="meta-item"><span class="material-icons-round">table_restaurant</span> Mesa {{ selectedOrder.tableNumber }}</div>
+        <div class="meta-item"><span class="material-icons-round">person</span> {{ selectedOrder.waiterName }}</div>
+        <div class="meta-item"><span class="material-icons-round">schedule</span> Hace {{ getMinutesAgo(selectedOrder.createdAt) }} min</div>
+      </div>
+
+      <div class="detail-items">
+        <h4>Productos</h4>
+        <div class="item-row" *ngFor="let item of selectedOrder.items">
+          <div class="item-info">
+            <span class="item-name">{{ item.productName }}</span>
+            <span class="item-notes" *ngIf="item.notes">📝 {{ item.notes }}</span>
+          </div>
+          <span class="item-qty">x{{ item.quantity }}</span>
+          <span class="item-price">${{ item.subtotal }}</span>
+        </div>
+      </div>
+
+      <div class="detail-notes" *ngIf="selectedOrder.notes">
+        <h4>Notas del pedido</h4>
+        <p>{{ selectedOrder.notes }}</p>
+      </div>
+
+      <div class="detail-total">
+        <span>Total</span>
+        <span class="total-amount">${{ selectedOrder.total.toLocaleString() }}</span>
+      </div>
+
+      <div class="detail-status-actions">
+        <h4>Cambiar estado</h4>
+        <div class="action-buttons">
+          <button class="action-btn" (click)="changeStatus(selectedOrder.id, 'pending')" [class.active]="selectedOrder.status === 'pending'" style="--ac: #FF9800">Pendiente</button>
+          <button class="action-btn" (click)="changeStatus(selectedOrder.id, 'preparing')" [class.active]="selectedOrder.status === 'preparing'" style="--ac: #2196F3">Preparando</button>
+          <button class="action-btn" (click)="changeStatus(selectedOrder.id, 'ready')" [class.active]="selectedOrder.status === 'ready'" style="--ac: #4CAF50">Listo</button>
+          <button class="action-btn" (click)="changeStatus(selectedOrder.id, 'delivered')" [class.active]="selectedOrder.status === 'delivered'" style="--ac: #9E9E9E">Entregado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
