@@ -1,0 +1,161 @@
+<div class="checkout-page">
+  <!-- Confirmed State -->
+  <div class="confirmed-state" *ngIf="confirmed">
+    <div class="confirmed-card">
+      <div class="confirmed-icon">
+        <span class="material-icons-round">check_circle</span>
+      </div>
+      <h2>¡Pedido Confirmado!</h2>
+      <p>Tu pedido ha sido enviado correctamente. Recibirás una notificación cuando esté listo.</p>
+      <div class="confirmed-actions">
+        <a routerLink="/store/my-orders" class="btn-primary">
+          <span class="material-icons-round">receipt_long</span> Ver Mis Pedidos
+        </a>
+        <a routerLink="/store" class="btn-secondary">
+          <span class="material-icons-round">home</span> Volver al Inicio
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+  <div *ngIf="!confirmed && !cart.isEmpty()">
+    <h1>
+      <span class="material-icons-round">shopping_bag</span>
+      Confirmar Pedido
+    </h1>
+
+    <div class="checkout-grid">
+      <!-- Form Section -->
+      <div class="checkout-form">
+        <!-- Customer Data / Registration -->
+        <div class="form-section">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="m-0"><span class="material-icons-round">person</span> {{ auth.isLoggedIn() ? 'Datos del Cliente' : 'Registro de Cliente' }}</h3>
+            <span *ngIf="!auth.isLoggedIn()" class="text-xs bg-cafe-100 text-cafe-800 font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+              <span class="material-icons-round text-sm">how_to_reg</span> Registro automático
+            </span>
+          </div>
+
+          <p *ngIf="!auth.isLoggedIn()" class="text-xs text-amber-800 bg-amber-50 border border-amber-200 p-3 rounded-lg mb-4 flex items-center gap-2">
+            <span class="material-icons-round text-amber-600 text-lg">info</span>
+            Ingresa tus datos para registrar tu pedido. Tu cuenta se creará automáticamente para que des seguimiento a tu pedido.
+          </p>
+
+          <div class="form-group">
+            <label for="cust-name">Nombre completo *</label>
+            <input type="text" id="cust-name" [(ngModel)]="customerName" placeholder="Ej. Juan Pérez" />
+          </div>
+          <div class="form-group">
+            <label for="cust-email">Correo electrónico *</label>
+            <input type="email" id="cust-email" [(ngModel)]="customerEmail" placeholder="juan@ejemplo.com" />
+          </div>
+          <div class="form-group">
+            <label for="cust-phone">Teléfono de contacto (Opcional)</label>
+            <input type="tel" id="cust-phone" [(ngModel)]="customerPhone" placeholder="Ej. 55 1234 5678" />
+          </div>
+        </div>
+
+        <!-- Order Type -->
+        <div class="form-section">
+          <h3><span class="material-icons-round">restaurant</span> Tipo de Pedido</h3>
+          <div class="radio-group">
+            <label class="radio-card" [class.selected]="orderType === 'takeaway'">
+              <input type="radio" name="orderType" value="takeaway" [(ngModel)]="orderType" />
+              <span class="material-icons-round">takeout_dining</span>
+              <div>
+                <strong>Para llevar</strong>
+                <span>Recoge tu pedido en mostrador</span>
+              </div>
+            </label>
+            <label class="radio-card" [class.selected]="orderType === 'dine-in'">
+              <input type="radio" name="orderType" value="dine-in" [(ngModel)]="orderType" />
+              <span class="material-icons-round">table_restaurant</span>
+              <div>
+                <strong>Consumir en mesa</strong>
+                <span>Selecciona tu mesa favorita</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Table Selection -->
+        <div class="form-section" *ngIf="orderType === 'dine-in'">
+          <h3><span class="material-icons-round">table_bar</span> Selecciona Mesa</h3>
+          <div class="table-grid">
+            <button *ngFor="let table of availableTables"
+                    class="table-option"
+                    [class.selected]="selectedTable === table.id"
+                    (click)="selectedTable = table.id">
+              <span class="table-number">{{ table.number }}</span>
+              <span class="table-info">{{ table.capacity }} personas · {{ table.zone }}</span>
+            </button>
+          </div>
+          <p class="no-tables" *ngIf="availableTables.length === 0">No hay mesas disponibles en este momento</p>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-section">
+          <h3><span class="material-icons-round">payment</span> Método de Pago</h3>
+          <div class="payment-options">
+            <label class="payment-card" [class.selected]="paymentMethod === 'cash'">
+              <input type="radio" name="payment" value="cash" [(ngModel)]="paymentMethod" />
+              <span class="material-icons-round">payments</span>
+              <span>Efectivo</span>
+            </label>
+            <label class="payment-card" [class.selected]="paymentMethod === 'card'">
+              <input type="radio" name="payment" value="card" [(ngModel)]="paymentMethod" />
+              <span class="material-icons-round">credit_card</span>
+              <span>Tarjeta</span>
+            </label>
+            <label class="payment-card" [class.selected]="paymentMethod === 'transfer'">
+              <input type="radio" name="payment" value="transfer" [(ngModel)]="paymentMethod" />
+              <span class="material-icons-round">account_balance</span>
+              <span>Transferencia</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="checkout-summary">
+        <div class="summary-card">
+          <h3>Resumen del Pedido</h3>
+          <div class="summary-items">
+            <div *ngFor="let item of cart.cartItems()" class="summary-item">
+              <span class="s-qty">{{ item.quantity }}x</span>
+              <span class="s-name">{{ item.productName }}</span>
+              <span class="s-price">${{ (item.price * item.quantity).toFixed(2) }}</span>
+            </div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>${{ cart.subtotal().toFixed(2) }}</span>
+          </div>
+          <div class="summary-row">
+            <span>IVA (16%)</span>
+            <span>${{ cart.tax().toFixed(2) }}</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>${{ cart.total().toFixed(2) }}</span>
+          </div>
+          <button class="btn-confirm" (click)="confirmOrder()" [disabled]="loading || !customerName.trim() || !customerEmail.trim()">
+            <span class="btn-loader" *ngIf="loading"></span>
+            <span class="material-icons-round" *ngIf="!loading">check_circle</span>
+            <span>{{ loading ? 'Procesando...' : 'Confirmar Pedido' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty Cart -->
+  <div class="empty-state" *ngIf="!confirmed && cart.isEmpty()">
+    <span class="material-icons-round">remove_shopping_cart</span>
+    <h3>No hay productos en tu carrito</h3>
+    <a routerLink="/store/menu" class="btn-primary">Ir al Menú</a>
+  </div>
+</div>

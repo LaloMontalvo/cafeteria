@@ -30,8 +30,8 @@
       <!-- Card Header -->
       <div class="kc-header">
         <div class="kc-table">
-          <span class="material-icons-round">table_restaurant</span>
-          Mesa {{ order.tableNumber }}
+          <span class="material-icons-round">{{ order.tableNumber > 0 ? 'table_restaurant' : 'takeout_dining' }}</span>
+          {{ order.tableNumber > 0 ? 'Mesa ' + order.tableNumber : 'Para Llevar' }}
         </div>
         <div class="kc-time" [ngClass]="getTimeClass(order.createdAt)">
           <span class="material-icons-round">timer</span>

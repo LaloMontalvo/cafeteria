@@ -23,7 +23,8 @@ export class UserListComponent {
     const map: Record<UserRole, { label: string; color: string }> = {
       admin: { label: 'Administrador', color: '#6F4E37' },
       waiter: { label: 'Mesero', color: '#2196F3' },
-      kitchen: { label: 'Cocina', color: '#FF9800' }
+      kitchen: { label: 'Cocina', color: '#FF9800' },
+      client: { label: 'Cliente', color: '#4CAF50' }
     };
     return map[role];
   }

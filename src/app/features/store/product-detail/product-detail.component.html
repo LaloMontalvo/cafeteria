@@ -1,0 +1,71 @@
+<div class="detail-page" *ngIf="product">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a routerLink="/store">Inicio</a>
+    <span class="material-icons-round">chevron_right</span>
+    <a routerLink="/store/menu">Menú</a>
+    <span class="material-icons-round">chevron_right</span>
+    <span class="current">{{ product.name }}</span>
+  </nav>
+
+  <div class="detail-grid">
+    <!-- Product Image -->
+    <div class="detail-image-wrap">
+      <div class="detail-image overflow-hidden relative w-full h-80 bg-cafe-100 rounded-3xl flex items-center justify-center shadow-xl border-4 border-white">
+        <img *ngIf="product.image.startsWith('http')" [src]="product.image" [alt]="product.name" class="w-full h-full object-cover" />
+        <span *ngIf="!product.image.startsWith('http')" class="material-icons-round text-7xl text-cafe-600">{{ product.image }}</span>
+      </div>
+      <div class="detail-category-badge">
+        {{ productService.getCategoryName(product.categoryId) }}
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="detail-info">
+      <h1>{{ product.name }}</h1>
+      <p class="detail-price">${{ product.price.toFixed(2) }} MXN</p>
+      <p class="detail-desc">{{ product.description }}</p>
+
+      <!-- Options -->
+      <div class="options-section">
+        <h3>Personaliza tu pedido</h3>
+        <div class="options-grid">
+          <button *ngFor="let opt of options"
+                  class="option-chip"
+                  [class.selected]="opt.selected"
+                  (click)="toggleOption(opt)">
+            <span class="material-icons-round">{{ opt.icon }}</span>
+            <span>{{ opt.label }}</span>
+            <span class="check-icon material-icons-round" *ngIf="opt.selected">check_circle</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="notes-section">
+        <label for="product-notes">Notas especiales</label>
+        <textarea id="product-notes"
+                  [(ngModel)]="notes"
+                  placeholder="Ej: Sin hielo, extra crema..."
+                  rows="3"></textarea>
+      </div>
+
+      <!-- Quantity + Add -->
+      <div class="add-section">
+        <div class="quantity-control">
+          <button (click)="decrementQty()" [disabled]="quantity <= 1">
+            <span class="material-icons-round">remove</span>
+          </button>
+          <span class="qty-value">{{ quantity }}</span>
+          <button (click)="incrementQty()" [disabled]="quantity >= 20">
+            <span class="material-icons-round">add</span>
+          </button>
+        </div>
+        <button class="btn-add-cart" [class.added]="added" (click)="addToCart()" [disabled]="added">
+          <span class="material-icons-round">{{ added ? 'check' : 'add_shopping_cart' }}</span>
+          <span>{{ added ? '¡Agregado al carrito!' : 'Agregar al carrito — $' + (product.price * quantity).toFixed(2) }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

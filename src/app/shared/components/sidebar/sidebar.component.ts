@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
@@ -24,18 +24,20 @@ export class SidebarComponent {
 
   constructor(
     public auth: AuthService,
-    public notifService: NotificationService
+    public notifService: NotificationService,
+    private router: Router
   ) {}
 
   navItems: NavItem[] = [
     { icon: 'dashboard', label: 'Dashboard', route: '/dashboard', roles: ['admin'] },
-    { icon: 'table_restaurant', label: 'Mesas', route: '/tables', roles: ['admin', 'waiter'] },
-    { icon: 'receipt_long', label: 'Órdenes', route: '/orders', roles: ['admin', 'waiter'] },
+    { icon: 'table_restaurant', label: 'Mesas (Recepción)', route: '/tables', roles: ['admin', 'waiter'] },
+    { icon: 'receipt_long', label: 'Órdenes (Recepción)', route: '/orders', roles: ['admin', 'waiter'] },
     { icon: 'restaurant_menu', label: 'Productos', route: '/products', roles: ['admin'] },
     { icon: 'soup_kitchen', label: 'Cocina', route: '/kitchen', roles: ['admin', 'kitchen'] },
     { icon: 'people', label: 'Usuarios', route: '/users', roles: ['admin'] },
     { icon: 'bar_chart', label: 'Reportes', route: '/reports', roles: ['admin'] },
     { icon: 'notifications', label: 'Notificaciones', route: '/notifications', roles: ['admin', 'waiter', 'kitchen'] },
+    { icon: 'storefront', label: 'Tienda Web', route: '/store', roles: ['admin', 'waiter', 'kitchen'] },
   ];
 
   get visibleItems(): NavItem[] {
@@ -51,5 +53,6 @@ export class SidebarComponent {
 
   logout(): void {
     this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

@@ -1,0 +1,160 @@
+<!-- Store Navbar -->
+<header class="store-navbar">
+  <div class="navbar-inner">
+    <!-- Logo -->
+    <a routerLink="/store" class="navbar-brand">
+      <span class="material-icons-round brand-icon">coffee</span>
+      <span class="brand-name">Café Aroma</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="navbar-links">
+      <a routerLink="/store" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <span class="material-icons-round">home</span> Inicio
+      </a>
+      <a routerLink="/store/menu" routerLinkActive="active">
+        <span class="material-icons-round">restaurant_menu</span> Menú
+      </a>
+      <a routerLink="/store/my-orders" routerLinkActive="active" *ngIf="auth.isLoggedIn()">
+        <span class="material-icons-round">receipt_long</span> Mis Pedidos
+      </a>
+      <a routerLink="/store/profile" routerLinkActive="active" *ngIf="auth.isLoggedIn()">
+        <span class="material-icons-round">person</span> Perfil
+      </a>
+    </nav>
+
+    <!-- Right Actions -->
+    <div class="navbar-actions">
+      <!-- Notifications Bell for Client -->
+      <div class="relative inline-block" *ngIf="auth.isLoggedIn()">
+        <button (click)="toggleNotifications()" class="p-2 text-cafe-800 hover:bg-cafe-100 rounded-full relative transition-all cursor-pointer flex items-center justify-center">
+          <span class="material-icons-round text-xl">notifications</span>
+          <span *ngIf="unreadClientNotificationsCount > 0" class="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-white animate-pulse">
+            {{ unreadClientNotificationsCount }}
+          </span>
+        </button>
+
+        <!-- Notification Popup -->
+        <div *ngIf="showNotifications" class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-cafe-100 z-50 p-4 animate-in fade-in slide-in-from-top-2">
+          <div class="flex items-center justify-between pb-3 border-b border-cafe-100">
+            <h4 class="font-bold text-cafe-900 text-sm m-0 flex items-center gap-1.5">
+              <span class="material-icons-round text-amber-600 text-base">notifications_active</span> Notificaciones
+            </h4>
+            <span class="text-xs text-cafe-500 font-medium">{{ clientNotifications.length }} recibida/s</span>
+          </div>
+
+          <div class="max-h-64 overflow-y-auto my-2 divide-y divide-cafe-50">
+            <div *ngFor="let notif of clientNotifications"
+                 (click)="markNotificationRead(notif.id)"
+                 class="py-2.5 px-1 hover:bg-cafe-50/50 rounded-lg transition-all cursor-pointer"
+                 [class.opacity-60]="notif.read">
+              <div class="flex items-start gap-2">
+                <span class="material-icons-round text-amber-600 text-lg mt-0.5">
+                  {{ notif.type === 'order_ready' ? 'stars' : 'soup_kitchen' }}
+                </span>
+                <div>
+                  <h5 class="text-xs font-bold text-cafe-900 m-0">{{ notif.title }}</h5>
+                  <p class="text-[11px] text-cafe-700 m-0 mt-0.5 leading-tight">{{ notif.message }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="clientNotifications.length === 0" class="text-center py-6 text-cafe-400 text-xs">
+              <span class="material-icons-round text-2xl block mb-1 opacity-40">notifications_none</span>
+              No tienes notificaciones por ahora
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-cafe-100 text-center">
+            <a routerLink="/store/my-orders" (click)="showNotifications = false" class="text-xs font-bold text-amber-800 hover:text-amber-950 flex items-center justify-center gap-1">
+              <span>Ver Mis Pedidos en Tiempo Real</span>
+              <span class="material-icons-round text-sm">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart -->
+      <a routerLink="/store/cart" class="cart-btn" routerLinkActive="active">
+        <span class="material-icons-round">shopping_cart</span>
+        <span class="cart-badge" *ngIf="cart.itemCount() > 0">{{ cart.itemCount() }}</span>
+      </a>
+
+      <!-- Auth -->
+      <a routerLink="/login" class="auth-btn" *ngIf="!auth.isLoggedIn()">
+        <span class="material-icons-round">login</span>
+        <span class="auth-text">Iniciar Sesión</span>
+      </a>
+      <div class="user-menu" *ngIf="auth.isLoggedIn()">
+        <a *ngIf="auth.userRole() !== 'client'"
+           routerLink="/dashboard"
+           class="bg-cafe-600 text-white hover:bg-cafe-700 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all mr-2 shadow-sm"
+           title="Ir al Panel de Control">
+          <span class="material-icons-round text-sm">space_dashboard</span>
+          <span>Panel {{ auth.userRole() === 'admin' ? 'Admin' : auth.userRole() === 'waiter' ? 'Recepción' : 'Cocina' }}</span>
+        </a>
+        <div class="user-avatar-small">
+          <span class="material-icons-round">person</span>
+        </div>
+        <span class="user-name-nav">{{ auth.userName() }}</span>
+        <button (click)="logout()" class="text-xs text-red-600 hover:text-red-800 font-semibold ml-2 underline cursor-pointer">
+          Salir
+        </button>
+      </div>
+
+      <!-- Mobile Toggle -->
+      <button class="mobile-toggle" (click)="toggleMobileMenu()">
+        <span class="material-icons-round">{{ mobileMenuOpen ? 'close' : 'menu' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.open]="mobileMenuOpen" (click)="mobileMenuOpen = false">
+    <a routerLink="/store" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <span class="material-icons-round">home</span> Inicio
+    </a>
+    <a routerLink="/store/menu" routerLinkActive="active">
+      <span class="material-icons-round">restaurant_menu</span> Menú
+    </a>
+    <a routerLink="/store/cart" routerLinkActive="active">
+      <span class="material-icons-round">shopping_cart</span> Carrito
+      <span class="mobile-badge" *ngIf="cart.itemCount() > 0">({{ cart.itemCount() }})</span>
+    </a>
+    <a routerLink="/store/my-orders" routerLinkActive="active" *ngIf="auth.isLoggedIn()">
+      <span class="material-icons-round">receipt_long</span> Mis Pedidos
+    </a>
+    <a routerLink="/store/profile" routerLinkActive="active" *ngIf="auth.isLoggedIn()">
+      <span class="material-icons-round">person</span> Perfil
+    </a>
+    <a (click)="logout()" *ngIf="auth.isLoggedIn()" class="cursor-pointer text-red-600">
+      <span class="material-icons-round">logout</span> Cerrar Sesión
+    </a>
+    <a routerLink="/login" *ngIf="!auth.isLoggedIn()">
+      <span class="material-icons-round">login</span> Iniciar Sesión
+    </a>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="store-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Footer -->
+<footer class="store-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="material-icons-round">coffee</span>
+      <span>Café Aroma</span>
+    </div>
+    <div class="footer-info">
+      <p>📍 Av. Reforma 245, Col. Centro, CDMX</p>
+      <p>📞 (55) 1234-5678</p>
+      <p>🕐 Lun-Sáb: 7:00 AM - 10:00 PM | Dom: 8:00 AM - 6:00 PM</p>
+    </div>
+    <div class="footer-copy">
+      <p>&copy; 2026 Café Aroma. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

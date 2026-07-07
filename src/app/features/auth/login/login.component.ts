@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -20,6 +20,12 @@ export class LoginComponent {
 
   constructor(private auth: AuthService, private router: Router) {}
 
+  async quickLogin(roleEmail: string, rolePass: string): Promise<void> {
+    this.email = roleEmail;
+    this.password = rolePass;
+    await this.onSubmit();
+  }
+
   async onSubmit(): Promise<void> {
     this.errorMessage = '';
 
@@ -29,9 +35,7 @@ export class LoginComponent {
     }
 
     this.loading = true;
-
-    // Simulate network delay
-    await new Promise(r => setTimeout(r, 800));
+    await new Promise(r => setTimeout(r, 400));
 
     const result = this.auth.login(this.email, this.password);
     this.loading = false;
@@ -48,8 +52,11 @@ export class LoginComponent {
         case 'kitchen':
           this.router.navigate(['/kitchen']);
           break;
+        case 'client':
+          this.router.navigate(['/store']);
+          break;
         default:
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/store']);
       }
     } else {
       this.errorMessage = result.message;

@@ -1,0 +1,91 @@
+<div class="orders-page">
+  <h1>
+    <span class="material-icons-round">receipt_long</span>
+    Mis Pedidos
+  </h1>
+
+  <!-- Active Orders -->
+  <div class="orders-section" *ngIf="activeOrders.length > 0">
+    <h2>Pedidos Activos</h2>
+    <div class="orders-list">
+      <div *ngFor="let order of activeOrders"
+           class="order-card"
+           [class.expanded]="selectedOrder?.id === order.id"
+           [class]="'status-' + order.status">
+        <div class="order-header" (click)="selectOrder(order)">
+          <div class="order-status-badge" [class]="order.status">
+            <span class="material-icons-round">{{ getStatusIcon(order.status) }}</span>
+            <span>{{ getStatusLabel(order.status) }}</span>
+          </div>
+          <div class="order-meta">
+            <span class="order-total">${{ order.total.toFixed(2) }}</span>
+            <span class="order-time">{{ getTimeAgo(order.createdAt) }}</span>
+          </div>
+          <span class="material-icons-round expand-icon">
+            {{ selectedOrder?.id === order.id ? 'expand_less' : 'expand_more' }}
+          </span>
+        </div>
+
+        <!-- Order Detail -->
+        <div class="order-detail" *ngIf="selectedOrder?.id === order.id">
+          <div class="order-items">
+            <div *ngFor="let item of order.items" class="order-item">
+              <span class="oi-qty">{{ item.quantity }}x</span>
+              <span class="oi-name">{{ item.productName }}</span>
+              <span class="oi-notes" *ngIf="item.notes">{{ item.notes }}</span>
+              <span class="oi-price">${{ item.subtotal.toFixed(2) }}</span>
+            </div>
+          </div>
+          <div class="order-footer">
+            <span *ngIf="order.tableNumber > 0">Mesa {{ order.tableNumber }}</span>
+            <span *ngIf="order.tableNumber === 0">Para llevar</span>
+            <span class="order-total-big">${{ order.total.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Past Orders -->
+  <div class="orders-section" *ngIf="pastOrders.length > 0">
+    <h2>Historial de Pedidos</h2>
+    <div class="orders-list">
+      <div *ngFor="let order of pastOrders"
+           class="order-card past"
+           [class.expanded]="selectedOrder?.id === order.id">
+        <div class="order-header" (click)="selectOrder(order)">
+          <div class="order-status-badge delivered">
+            <span class="material-icons-round">done_all</span>
+            <span>Entregado</span>
+          </div>
+          <div class="order-meta">
+            <span class="order-total">${{ order.total.toFixed(2) }}</span>
+            <span class="order-time">{{ getTimeAgo(order.createdAt) }}</span>
+          </div>
+          <span class="material-icons-round expand-icon">
+            {{ selectedOrder?.id === order.id ? 'expand_less' : 'expand_more' }}
+          </span>
+        </div>
+        <div class="order-detail" *ngIf="selectedOrder?.id === order.id">
+          <div class="order-items">
+            <div *ngFor="let item of order.items" class="order-item">
+              <span class="oi-qty">{{ item.quantity }}x</span>
+              <span class="oi-name">{{ item.productName }}</span>
+              <span class="oi-price">${{ item.subtotal.toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="activeOrders.length === 0 && pastOrders.length === 0">
+    <span class="material-icons-round">receipt_long</span>
+    <h3>No tienes pedidos aún</h3>
+    <p>Haz tu primer pedido desde nuestro menú</p>
+    <a routerLink="/store/menu" class="btn-primary">
+      <span class="material-icons-round">restaurant_menu</span> Ver Menú
+    </a>
+  </div>
+</div>

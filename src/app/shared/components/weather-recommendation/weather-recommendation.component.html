@@ -1,0 +1,174 @@
+<div class="weather-recommendation-wrapper" *ngIf="weatherService.currentWeather() as weather">
+  
+  <!-- Header Control Bar -->
+  <div class="weather-control-bar">
+    <div class="control-left">
+      <div class="section-title">
+        <span class="material-icons-round title-icon">light_mode</span>
+        <div>
+          <h3>Recomendador de Bebidas por Clima</h3>
+          <p>Recomendaciones inteligentes sincronizadas con tu ubicación real</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-right">
+      <!-- GPS Button -->
+      <button (click)="useMyLocation()" class="btn-gps" [class.loading]="locationLoading()" title="Actualizar mi ubicación actual">
+        <span class="material-icons-round" [class.spin]="locationLoading()">{{ locationLoading() ? 'sync' : 'my_location' }}</span>
+        <span class="gps-text">{{ locationLoading() ? 'Localizando...' : 'Mi Ubicación' }}</span>
+      </button>
+
+      <!-- API Key config button -->
+      <button (click)="showKeyModal = true" class="btn-config" title="Configurar API Key de OpenWeather">
+        <span class="material-icons-round">key</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Nearby Cities Chips -->
+  <div class="cities-chips" *ngIf="nearbyCities().length > 0">
+    <span class="chip-label">
+      <span class="material-icons-round chip-label-icon">near_me</span>
+      Ciudades cercanas:
+    </span>
+    <button 
+      *ngFor="let city of nearbyCities()" 
+      (click)="onCitySelect(city)"
+      [class.active]="weather.city.toLowerCase() === city.name.toLowerCase()"
+      class="city-chip">
+      {{ city.name }}
+      <span class="chip-distance">{{ city.distance }} km</span>
+    </button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div *ngIf="addedMessage()" class="toast-notification">
+    <span class="material-icons-round">check_circle</span>
+    {{ addedMessage() }}
+  </div>
+
+  <!-- Weather Hero Banner -->
+  <div class="weather-hero-card" [ngClass]="weather.climateType">
+    <div class="hero-glow"></div>
+    
+    <div class="hero-content">
+      <div class="weather-main-info">
+        <div class="location-badge">
+          <span class="material-icons-round">location_on</span>
+          <span>{{ weather.city }}<ng-container *ngIf="weather.country">, {{ weather.country }}</ng-container></span>
+          <span class="mock-badge" *ngIf="weather.isMock" title="Modo demo con datos de clima simulados sin necesidad de API Key">DEMO</span>
+        </div>
+
+        <div class="temp-display-group">
+          <span class="big-temp">{{ weather.temp }}°</span>
+          <div class="temp-details">
+            <span class="condition-name">{{ weather.description }}</span>
+            <span class="feels-like">Sensación térmica: {{ weather.feelsLike }}°C</span>
+          </div>
+        </div>
+
+        <div class="weather-metrics">
+          <div class="metric-item">
+            <span class="material-icons-round">water_drop</span>
+            <div>
+              <span class="metric-val">{{ weather.humidity }}%</span>
+              <span class="metric-lbl">Humedad</span>
+            </div>
+          </div>
+          <div class="metric-item">
+            <span class="material-icons-round">air</span>
+            <div>
+              <span class="metric-val">{{ weather.windSpeed }} km/h</span>
+              <span class="metric-lbl">Viento</span>
+            </div>
+          </div>
+          <div class="metric-item">
+            <span class="material-icons-round">{{ getClimateIcon(weather.climateType) }}</span>
+            <div>
+              <span class="metric-val climate-tag">{{ weather.climateType.toUpperCase() }}</span>
+              <span class="metric-lbl">Estado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advice Message Box -->
+      <div class="weather-advice-box">
+        <div class="advice-header">
+          <span class="material-icons-round advice-icon">auto_awesome</span>
+          <span>Sugerencia del Barista para hoy</span>
+        </div>
+        <p class="advice-text">{{ weather.adviceMessage }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommended Drinks Section -->
+  <div class="recommendations-section">
+    <div class="section-header">
+      <div class="header-left">
+        <h4>Bebidas Recomendadas para el Clima Actual</h4>
+        <span class="recommendation-count">{{ recommendedProducts.length }} opciones perfectas</span>
+      </div>
+    </div>
+
+    <div class="products-grid" *ngIf="recommendedProducts.length > 0; else noProducts">
+      <div class="product-card" *ngFor="let product of recommendedProducts">
+        <div class="card-image-wrap">
+          <img [src]="product.imageUrl || product.image" [alt]="product.name" loading="lazy" />
+          <span class="badge-tag" [ngClass]="weather.climateType">
+            {{ getDrinkRecommendationTag(product, weather.climateType) }}
+          </span>
+        </div>
+        <div class="card-body">
+          <h5 class="product-title">{{ product.name }}</h5>
+          <p class="product-desc">{{ product.description }}</p>
+          
+          <div class="card-footer">
+            <div class="price-wrap">
+              <span class="currency">$</span>
+              <span class="price-val">{{ product.price }}</span>
+            </div>
+            <button (click)="quickOrder(product)" class="btn-order">
+              <span class="material-icons-round">add_shopping_cart</span>
+              <span>Ordenar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noProducts>
+      <div class="empty-state">
+        <span class="material-icons-round">emoji_food_beverage</span>
+        <p>No hay productos registrados en esta categoría en este momento.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- API Key Modal -->
+  <div class="modal-overlay" *ngIf="showKeyModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h5>Configurar API Key de OpenWeatherMap</h5>
+        <button (click)="showKeyModal = false" class="btn-close">
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Ingresa tu API Key personal de OpenWeatherMap si deseas consultar clima en tiempo real.</p>
+        <div class="form-group">
+          <label>API Key:</label>
+          <input type="text" [(ngModel)]="customApiKey" placeholder="Ej: c8309101d248b610c550..." class="modal-input" />
+        </div>
+        <p class="help-text">Si no tienes una API Key o la dejas por defecto, el sistema usará el simulador inteligente de clima en tiempo real.</p>
+      </div>
+      <div class="modal-footer">
+        <button (click)="showKeyModal = false" class="btn-cancel">Cancelar</button>
+        <button (click)="saveApiKey()" class="btn-save">Guardar y Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+</div>

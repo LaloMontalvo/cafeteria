@@ -35,6 +35,16 @@ export const MOCK_USERS: User[] = [
     id: 'u5', name: 'Roberto Díaz', email: 'roberto@cafe.com',
     password: 'cocina123', role: 'kitchen', avatar: '', active: false,
     createdAt: new Date('2025-04-10')
+  },
+  {
+    id: 'u6', name: 'Laura Martínez', email: 'laura@gmail.com',
+    password: 'cliente123', role: 'client', avatar: '', active: true,
+    createdAt: new Date('2025-05-01')
+  },
+  {
+    id: 'u7', name: 'Pedro Sánchez', email: 'pedro@gmail.com',
+    password: 'cliente123', role: 'client', avatar: '', active: true,
+    createdAt: new Date('2025-05-15')
   }
 ];
 
@@ -51,28 +61,111 @@ export const MOCK_CATEGORIES: Category[] = [
 // ── Productos ───────────────────────────────
 export const MOCK_PRODUCTS: Product[] = [
   // Cafés
-  { id: 'p1', name: 'Café Americano', categoryId: 'cat1', price: 45, description: 'Café negro intenso con agua caliente', image: 'coffee', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p2', name: 'Capuchino', categoryId: 'cat1', price: 55, description: 'Espresso con leche espumada y canela', image: 'coffee', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p3', name: 'Latte', categoryId: 'cat1', price: 60, description: 'Espresso con leche vaporizada cremosa', image: 'coffee', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p4', name: 'Espresso', categoryId: 'cat1', price: 35, description: 'Shot concentrado de café puro', image: 'coffee', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p5', name: 'Chocolate Caliente', categoryId: 'cat1', price: 50, description: 'Chocolate artesanal con leche cremosa', image: 'coffee', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p6', name: 'Té Chai', categoryId: 'cat1', price: 48, description: 'Té negro con especias y leche', image: 'emoji_food_beverage', available: true, createdAt: new Date('2025-01-15') },
+  {
+    id: 'p1', name: 'Café Americano', categoryId: 'cat1', price: 45,
+    description: 'Café negro intenso preparado con espresso doble y agua caliente artesanal.',
+    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p2', name: 'Capuchino Tradicional', categoryId: 'cat1', price: 55,
+    description: 'Espresso rico con leche vaporizada a la perfección y espumosa capa con canela.',
+    image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p3', name: 'Latte Cremoso', categoryId: 'cat1', price: 60,
+    description: 'Shot de espresso intenso suavizado con abundante leche caliente y toque cremoso.',
+    image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p4', name: 'Espresso Italiano', categoryId: 'cat1', price: 35,
+    description: 'Shot concentrado de granos 100% arábiga con crema dorada y aroma penetrante.',
+    image: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p5', name: 'Chocolate Caliente Artesanal', categoryId: 'cat1', price: 50,
+    description: 'Cacao oaxaqueño artesanal disuelto en leche entera o vegetal con bombones.',
+    image: 'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p6', name: 'Té Chai Especiado', categoryId: 'cat1', price: 48,
+    description: 'Té negro aromático infusionado con jengibre, cardamomo, canela y leche cremosa.',
+    image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
   // Bebidas Frías
-  { id: 'p7', name: 'Frappé de Moka', categoryId: 'cat2', price: 70, description: 'Café frappé con chocolate y crema', image: 'local_cafe', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p8', name: 'Limonada Natural', categoryId: 'cat2', price: 38, description: 'Limonada fresca con hierbabuena', image: 'local_bar', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p9', name: 'Smoothie de Fresa', categoryId: 'cat2', price: 65, description: 'Smoothie cremoso de fresa con yogurt', image: 'local_bar', available: false, createdAt: new Date('2025-02-01') },
+  {
+    id: 'p7', name: 'Frappé de Moka Gourmet', categoryId: 'cat2', price: 70,
+    description: 'Refrescante mezcla helada de café espresso, chocolate belga y crema batida.',
+    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p8', name: 'Limonada de Hierbabuena', categoryId: 'cat2', price: 38,
+    description: 'Limonada recién exprimida mezclada con hojas de hierbabuena fresca y hielo.',
+    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p9', name: 'Smoothie de Fresa & Yogurt', categoryId: 'cat2', price: 65,
+    description: 'Batido cremoso de fresas orgánicas maduras con yogurt griego y toque de miel.',
+    image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-02-01')
+  },
   // Postres
-  { id: 'p10', name: 'Pastel de Chocolate', categoryId: 'cat3', price: 75, description: 'Pastel húmedo de chocolate belga', image: 'cake', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p11', name: 'Cheesecake', categoryId: 'cat3', price: 80, description: 'Cheesecake NY con frutos rojos', image: 'cake', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p12', name: 'Galletas Artesanales', categoryId: 'cat3', price: 35, description: 'Pack de 3 galletas de avena y chispas', image: 'cookie', available: true, createdAt: new Date('2025-01-15') },
-  // Desayunos
-  { id: 'p13', name: 'Panini Caprese', categoryId: 'cat4', price: 85, description: 'Panini con mozzarella, tomate y albahaca', image: 'lunch_dining', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p14', name: 'Tostadas con Aguacate', categoryId: 'cat4', price: 72, description: 'Pan artesanal con aguacate y huevo', image: 'breakfast_dining', available: true, createdAt: new Date('2025-01-15') },
-  // Comida
-  { id: 'p15', name: 'Ensalada César', categoryId: 'cat5', price: 95, description: 'Lechuga romana, crutones, parmesano', image: 'lunch_dining', available: true, createdAt: new Date('2025-01-15') },
-  { id: 'p16', name: 'Wrap de Pollo', categoryId: 'cat5', price: 88, description: 'Tortilla integral con pollo y verduras', image: 'restaurant', available: true, createdAt: new Date('2025-02-10') },
-  // Promociones
-  { id: 'p17', name: 'Combo Café + Postre', categoryId: 'cat6', price: 99, description: 'Cualquier café + postre del día', image: 'local_offer', available: true, createdAt: new Date('2025-03-01') },
+  {
+    id: 'p10', name: 'Pastel de Chocolate Supremo', categoryId: 'cat3', price: 75,
+    description: 'Bizcocho ultra húmedo horneado con chocolate belga 70% cacao y fudge derretido.',
+    image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p11', name: 'Cheesecake Frutos Rojos', categoryId: 'cat3', price: 80,
+    description: 'Estilo Nueva York cremoso sobre galleta crujiente y coulis de frutos del bosque.',
+    image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p12', name: 'Galletas Artesanales', categoryId: 'cat3', price: 35,
+    description: 'Trío de galletas horneadas hoy con chispas de chocolate semiamargo y nuez.',
+    image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  // Desayunos & Comidas
+  {
+    id: 'p13', name: 'Panini Caprese Italiano', categoryId: 'cat4', price: 85,
+    description: 'Pan baguette crujiente con mozzarella fresca, jitomate y pesto de albahaca.',
+    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p14', name: 'Tostadas de Aguacate & Huevo', categoryId: 'cat4', price: 72,
+    description: 'Pan de masa madre tostado con aguacate, huevo pochado y semillas.',
+    image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p15', name: 'Ensalada César Gourmet', categoryId: 'cat5', price: 95,
+    description: 'Lechuga romana fresca, crutones dorados de ajo, pollo a la parrilla y parmesano.',
+    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-01-15')
+  },
+  {
+    id: 'p16', name: 'Wrap de Pollo Artisan', categoryId: 'cat5', price: 88,
+    description: 'Tortilla integral rellena de pechuga de pollo, tiras de pimiento y aguacate.',
+    image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-02-10')
+  },
+  {
+    id: 'p17', name: 'Combo Café + Postre', categoryId: 'cat6', price: 99,
+    description: 'Selecciona cualquier café de la casa emparejado con un postre del día.',
+    image: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80',
+    available: true, createdAt: new Date('2025-03-01')
+  }
 ];
 
 // ── Mesas ───────────────────────────────────
@@ -95,101 +188,13 @@ export const MOCK_TABLES: CafeTable[] = [
 const now = new Date();
 const minutesAgo = (m: number) => new Date(now.getTime() - m * 60000);
 
-export const MOCK_ORDERS: Order[] = [
-  {
-    id: 'ord1', tableId: 't2', tableNumber: 2, waiterId: 'u2', waiterName: 'María López',
-    items: [
-      { productId: 'p1', productName: 'Café Americano', quantity: 2, unitPrice: 45, notes: '', subtotal: 90 },
-      { productId: 'p10', productName: 'Pastel de Chocolate', quantity: 1, unitPrice: 75, notes: 'Sin crema', subtotal: 75 }
-    ],
-    status: 'preparing', notes: '', createdAt: minutesAgo(25), updatedAt: minutesAgo(15), total: 165, accountId: 'acc1'
-  },
-  {
-    id: 'ord2', tableId: 't4', tableNumber: 4, waiterId: 'u3', waiterName: 'Juan Pérez',
-    items: [
-      { productId: 'p2', productName: 'Capuchino', quantity: 3, unitPrice: 55, notes: 'Uno sin azúcar', subtotal: 165 },
-      { productId: 'p13', productName: 'Panini Caprese', quantity: 2, unitPrice: 85, notes: '', subtotal: 170 },
-      { productId: 'p8', productName: 'Limonada Natural', quantity: 1, unitPrice: 38, notes: 'Extra hielo', subtotal: 38 }
-    ],
-    status: 'pending', notes: 'Para llevar si es posible', createdAt: minutesAgo(5), updatedAt: minutesAgo(5), total: 373, accountId: 'acc2'
-  },
-  {
-    id: 'ord3', tableId: 't7', tableNumber: 7, waiterId: 'u2', waiterName: 'María López',
-    items: [
-      { productId: 'p15', productName: 'Ensalada César', quantity: 2, unitPrice: 95, notes: '', subtotal: 190 },
-      { productId: 'p3', productName: 'Latte', quantity: 2, unitPrice: 60, notes: 'Leche deslactosada', subtotal: 120 },
-      { productId: 'p11', productName: 'Cheesecake', quantity: 2, unitPrice: 80, notes: '', subtotal: 160 }
-    ],
-    status: 'ready', notes: '', createdAt: minutesAgo(45), updatedAt: minutesAgo(5), total: 470, accountId: 'acc3'
-  },
-  {
-    id: 'ord4', tableId: 't9', tableNumber: 9, waiterId: 'u3', waiterName: 'Juan Pérez',
-    items: [
-      { productId: 'p4', productName: 'Espresso', quantity: 1, unitPrice: 35, notes: 'Doble', subtotal: 35 },
-      { productId: 'p12', productName: 'Galletas Artesanales', quantity: 2, unitPrice: 35, notes: '', subtotal: 70 }
-    ],
-    status: 'delivered', notes: '', createdAt: minutesAgo(60), updatedAt: minutesAgo(20), total: 105, accountId: 'acc4'
-  },
-  {
-    id: 'ord5', tableId: 't2', tableNumber: 2, waiterId: 'u2', waiterName: 'María López',
-    items: [
-      { productId: 'p7', productName: 'Frappé de Moka', quantity: 1, unitPrice: 70, notes: '', subtotal: 70 }
-    ],
-    status: 'pending', notes: '', createdAt: minutesAgo(2), updatedAt: minutesAgo(2), total: 70, accountId: 'acc1'
-  }
-];
+export const MOCK_ORDERS: Order[] = [];
 
 // ── Cuentas ─────────────────────────────────
-export const MOCK_ACCOUNTS: Account[] = [
-  {
-    id: 'acc1', tableId: 't2', tableNumber: 2, orderIds: ['ord1', 'ord5'],
-    subtotal: 235, tax: 37.6, tip: 0, total: 272.6, status: 'open',
-    openedAt: minutesAgo(30), waiterId: 'u2', waiterName: 'María López'
-  },
-  {
-    id: 'acc2', tableId: 't4', tableNumber: 4, orderIds: ['ord2'],
-    subtotal: 373, tax: 59.68, tip: 0, total: 432.68, status: 'open',
-    openedAt: minutesAgo(10), waiterId: 'u3', waiterName: 'Juan Pérez'
-  },
-  {
-    id: 'acc3', tableId: 't7', tableNumber: 7, orderIds: ['ord3'],
-    subtotal: 470, tax: 75.2, tip: 50, total: 595.2, status: 'open',
-    openedAt: minutesAgo(50), waiterId: 'u2', waiterName: 'María López'
-  },
-  {
-    id: 'acc4', tableId: 't9', tableNumber: 9, orderIds: ['ord4'],
-    subtotal: 105, tax: 16.8, tip: 15, total: 136.8, status: 'paid',
-    openedAt: minutesAgo(65), closedAt: minutesAgo(10), waiterId: 'u3', waiterName: 'Juan Pérez'
-  }
-];
+export const MOCK_ACCOUNTS: Account[] = [];
 
 // ── Notificaciones ──────────────────────────
-export const MOCK_NOTIFICATIONS: AppNotification[] = [
-  {
-    id: 'n1', type: 'order_ready', title: 'Pedido Listo',
-    message: 'El pedido de la Mesa 7 está listo para servir.',
-    read: false, targetUserId: 'u2', orderId: 'ord3', tableNumber: 7,
-    createdAt: minutesAgo(5)
-  },
-  {
-    id: 'n2', type: 'new_order', title: 'Nuevo Pedido',
-    message: 'María López envió un pedido desde la Mesa 2.',
-    read: false, targetUserId: '', targetRole: 'kitchen', orderId: 'ord5', tableNumber: 2,
-    createdAt: minutesAgo(2)
-  },
-  {
-    id: 'n3', type: 'payment', title: 'Pago Registrado',
-    message: 'La cuenta de la Mesa 9 fue pagada exitosamente.',
-    read: true, targetUserId: 'u1', orderId: 'ord4', tableNumber: 9,
-    createdAt: minutesAgo(10)
-  },
-  {
-    id: 'n4', type: 'system', title: 'Producto Agotado',
-    message: 'El Smoothie de Fresa ha sido marcado como no disponible.',
-    read: true, targetUserId: 'u1',
-    createdAt: minutesAgo(120)
-  }
-];
+export const MOCK_NOTIFICATIONS: AppNotification[] = [];
 
 // ── Sales history data for reports ──────────
 export const MOCK_DAILY_SALES = [

@@ -1,0 +1,141 @@
+<!-- Hero Banner -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-circle hero-circle-1"></div>
+    <div class="hero-circle hero-circle-2"></div>
+    <div class="hero-circle hero-circle-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="material-icons-round">local_cafe</span>
+      <span>Café de especialidad</span>
+    </div>
+    <h1>Bienvenido a <span class="highlight">Café Aroma</span></h1>
+    <p class="hero-subtitle">Descubre el mejor café artesanal de la ciudad. Bebidas preparadas con pasión, ingredientes frescos y un ambiente inigualable.</p>
+    <div class="hero-actions">
+      <a routerLink="/store/menu" class="btn-primary">
+        <span class="material-icons-round">restaurant_menu</span> Ver Menú
+      </a>
+      <a routerLink="/store/menu" class="btn-secondary">
+        <span class="material-icons-round">shopping_bag</span> Ordenar Ahora
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <strong>500+</strong>
+        <span>Clientes felices</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <strong>17</strong>
+        <span>Productos únicos</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <strong>4.9★</strong>
+        <span>Calificación</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual flex items-center justify-center">
+    <div class="relative w-full max-w-md h-72 rounded-3xl overflow-hidden shadow-2xl border-4 border-white/30 group">
+      <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80" alt="Café Aroma Experience" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 text-white">
+        <span class="bg-amber-600/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold w-max mb-2">100% Granos de Especialidad</span>
+        <h3 class="text-xl font-bold font-serif m-0">Café Artesanal Recién Tostado</h3>
+        <p class="text-xs text-amber-100 m-0 mt-1">Granos de altura cultivados en Chiapas y Oaxaca.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Weather Recommendation Section for Clients -->
+<section class="section weather-section" style="padding-top: 20px; padding-bottom: 20px;">
+  <div class="section-inner">
+    <app-weather-recommendation></app-weather-recommendation>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="section categories-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>Nuestras Categorías</h2>
+      <p>Explora nuestra variedad de opciones artesanalmente preparadas</p>
+    </div>
+    <div class="categories-grid">
+      <a *ngFor="let cat of categories"
+         [routerLink]="['/store/menu']"
+         [queryParams]="{category: cat.id}"
+         class="category-card"
+         [style.--cat-color]="cat.color">
+        <div class="cat-icon-wrap">
+          <span class="material-icons-round">{{ cat.icon }}</span>
+        </div>
+        <span class="cat-name">{{ cat.name }}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section featured-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>Productos Destacados</h2>
+      <p>Los favoritos de nuestros clientes</p>
+    </div>
+    <div class="products-grid">
+      <div *ngFor="let product of featuredProducts" class="product-card">
+        <div class="product-image overflow-hidden relative h-48 bg-cafe-100 rounded-t-2xl flex items-center justify-center">
+          <img *ngIf="product.image.startsWith('http')" [src]="product.image" [alt]="product.name" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+          <span *ngIf="!product.image.startsWith('http')" class="material-icons-round text-5xl text-cafe-600">{{ product.image }}</span>
+        </div>
+        <div class="product-info">
+          <span class="product-category">{{ productService.getCategoryName(product.categoryId) }}</span>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <div class="product-footer">
+            <span class="product-price">${{ product.price.toFixed(2) }}</span>
+            <a [routerLink]="['/store/product', product.id]" class="product-btn">
+              <span class="material-icons-round">add_shopping_cart</span>
+              Agregar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a routerLink="/store/menu" class="btn-primary">
+        <span class="material-icons-round">restaurant_menu</span>
+        Ver todo el menú
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Info Section -->
+<section class="section info-section">
+  <div class="section-inner">
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="material-icons-round info-icon">schedule</span>
+        <h3>Horario</h3>
+        <p><strong>Lunes a Sábado</strong><br>7:00 AM — 10:00 PM</p>
+        <p><strong>Domingos</strong><br>8:00 AM — 6:00 PM</p>
+      </div>
+      <div class="info-card">
+        <span class="material-icons-round info-icon">location_on</span>
+        <h3>Ubicación</h3>
+        <p>Av. Reforma 245<br>Col. Centro, CDMX</p>
+        <p class="info-sub">A 2 cuadras del metro Hidalgo</p>
+      </div>
+      <div class="info-card">
+        <span class="material-icons-round info-icon">delivery_dining</span>
+        <h3>Ordenar</h3>
+        <p>Ordena en línea y recoge en tienda o consume en nuestras mesas</p>
+        <a routerLink="/store/menu" class="info-link">Hacer pedido →</a>
+      </div>
+    </div>
+  </div>
+</section>

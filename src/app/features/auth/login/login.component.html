@@ -15,17 +15,24 @@
         <p class="branding-subtitle">Sistema de gestión integral para tu cafetería</p>
         <div class="branding-features">
           <div class="feature-item">
+            <span class="material-icons-round">storefront</span>
+            <span>Tienda pública de compras</span>
+          </div>
+          <div class="feature-item">
             <span class="material-icons-round">table_restaurant</span>
-            <span>Control de mesas</span>
+            <span>Recepción y control de mesas</span>
           </div>
           <div class="feature-item">
-            <span class="material-icons-round">receipt_long</span>
-            <span>Gestión de pedidos</span>
+            <span class="material-icons-round">soup_kitchen</span>
+            <span>Comandera de cocina</span>
           </div>
-          <div class="feature-item">
-            <span class="material-icons-round">bar_chart</span>
-            <span>Reportes en tiempo real</span>
-          </div>
+        </div>
+
+        <div class="mt-8">
+          <a routerLink="/store" class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-medium px-4 py-2 rounded-xl backdrop-blur-sm transition-all text-sm">
+            <span class="material-icons-round text-base">arrow_back</span>
+            <span>Ir a la Tienda Pública sin Iniciar Sesión</span>
+          </a>
         </div>
       </div>
     </div>
@@ -34,8 +41,8 @@
     <div class="login-form-section">
       <div class="login-form-wrapper">
         <div class="form-header">
-          <h2>Bienvenido de vuelta</h2>
-          <p>Ingresa tus credenciales para continuar</p>
+          <h2>Iniciar Sesión por Rol</h2>
+          <p>Selecciona tu rol o ingresa tus credenciales</p>
         </div>
 
         <form (ngSubmit)="onSubmit()" class="login-form">
@@ -83,28 +90,49 @@
           <!-- Submit -->
           <button type="submit" class="login-btn" [disabled]="loading">
             <span class="btn-loader" *ngIf="loading"></span>
-            <span *ngIf="!loading">Iniciar Sesión</span>
+            <span *ngIf="!loading">Ingresar al Sistema</span>
             <span *ngIf="loading">Ingresando...</span>
           </button>
         </form>
 
-        <!-- Demo Credentials -->
-        <div class="demo-credentials">
-          <p class="demo-title">Credenciales de prueba:</p>
-          <div class="demo-grid">
-            <div class="demo-item" (click)="email = 'admin@cafe.com'; password = 'admin123'">
-              <span class="demo-role">Admin</span>
-              <span class="demo-email">admin&#64;cafe.com</span>
-            </div>
-            <div class="demo-item" (click)="email = 'maria@cafe.com'; password = 'mesero123'">
-              <span class="demo-role">Mesero</span>
-              <span class="demo-email">maria&#64;cafe.com</span>
-            </div>
-            <div class="demo-item" (click)="email = 'ana@cafe.com'; password = 'cocina123'">
-              <span class="demo-role">Cocina</span>
-              <span class="demo-email">ana&#64;cafe.com</span>
-            </div>
+        <!-- Demo Quick Role Access Buttons -->
+        <div class="demo-credentials mt-6">
+          <p class="demo-title text-center text-xs font-semibold uppercase tracking-wider text-amber-900 mb-3">Acceso Rápido por Rol (1-Clic):</p>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button type="button" class="flex flex-col items-center p-3 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-950 transition-all cursor-pointer shadow-sm text-left" (click)="quickLogin('laura@gmail.com', 'cliente123')">
+              <span class="flex items-center gap-1 font-bold text-xs text-amber-800">
+                <span class="material-icons-round text-sm">shopping_bag</span> Cliente
+              </span>
+              <span class="text-[11px] text-amber-700 font-medium">laura&#64;gmail.com</span>
+            </button>
+
+            <button type="button" class="flex flex-col items-center p-3 rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-950 transition-all cursor-pointer shadow-sm text-left" (click)="quickLogin('maria@cafe.com', 'mesero123')">
+              <span class="flex items-center gap-1 font-bold text-xs text-sky-800">
+                <span class="material-icons-round text-sm">table_restaurant</span> Recepción
+              </span>
+              <span class="text-[11px] text-sky-700 font-medium">maria&#64;cafe.com</span>
+            </button>
+
+            <button type="button" class="flex flex-col items-center p-3 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-950 transition-all cursor-pointer shadow-sm text-left" (click)="quickLogin('ana@cafe.com', 'cocina123')">
+              <span class="flex items-center gap-1 font-bold text-xs text-orange-800">
+                <span class="material-icons-round text-sm">soup_kitchen</span> Cocina
+              </span>
+              <span class="text-[11px] text-orange-700 font-medium">ana&#64;cafe.com</span>
+            </button>
+
+            <button type="button" class="flex flex-col items-center p-3 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-950 transition-all cursor-pointer shadow-sm text-left" (click)="quickLogin('admin@cafe.com', 'admin123')">
+              <span class="flex items-center gap-1 font-bold text-xs text-purple-800">
+                <span class="material-icons-round text-sm">admin_panel_settings</span> Admin
+              </span>
+              <span class="text-[11px] text-purple-700 font-medium">admin&#64;cafe.com</span>
+            </button>
           </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <a routerLink="/store" class="text-xs text-amber-800 hover:text-amber-950 underline font-semibold">
+            ← Volver a la Tienda Pública sin iniciar sesión
+          </a>
         </div>
       </div>
     </div>

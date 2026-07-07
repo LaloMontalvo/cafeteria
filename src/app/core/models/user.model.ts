@@ -2,7 +2,7 @@
 // User Model — Modelo de Usuario
 // ==========================================
 
-export type UserRole = 'admin' | 'waiter' | 'kitchen';
+export type UserRole = 'admin' | 'waiter' | 'kitchen' | 'client';
 
 export interface User {
   id: string;

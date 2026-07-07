@@ -10,7 +10,7 @@ export interface AppNotification {
   title: string;
   message: string;
   read: boolean;
-  targetUserId: string;
+  targetUserId?: string;
   targetRole?: string;
   orderId?: string;
   tableNumber?: number;

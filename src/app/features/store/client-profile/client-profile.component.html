@@ -1,0 +1,91 @@
+<div class="profile-page">
+  <h1>
+    <span class="material-icons-round">person</span>
+    Mi Perfil
+  </h1>
+
+  <div class="profile-grid">
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="profile-avatar">
+        <span class="material-icons-round">person</span>
+      </div>
+
+      <div class="profile-data" *ngIf="!editMode">
+        <h2>{{ auth.userName() }}</h2>
+        <p class="profile-email">{{ auth.user()?.email }}</p>
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <strong>{{ purchaseHistory.length }}</strong>
+            <span>Pedidos</span>
+          </div>
+          <div class="profile-stat">
+            <strong>${{ totalSpent.toFixed(2) }}</strong>
+            <span>Total gastado</span>
+          </div>
+        </div>
+        <button class="btn-edit" (click)="toggleEdit()">
+          <span class="material-icons-round">edit</span>
+          Editar Datos
+        </button>
+      </div>
+
+      <!-- Edit Mode -->
+      <div class="profile-edit" *ngIf="editMode">
+        <div class="form-group">
+          <label for="edit-name">Nombre</label>
+          <input type="text" id="edit-name" [(ngModel)]="editName" />
+        </div>
+        <div class="form-group">
+          <label for="edit-email">Correo electrónico</label>
+          <input type="email" id="edit-email" [(ngModel)]="editEmail" />
+        </div>
+        <div class="edit-actions">
+          <button class="btn-save" (click)="saveProfile()">
+            <span class="material-icons-round">check</span> Guardar
+          </button>
+          <button class="btn-cancel" (click)="toggleEdit()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-card">
+      <h3>Configuración</h3>
+      <div class="setting-item" (click)="toggleDarkMode()">
+        <div class="setting-info">
+          <span class="material-icons-round">{{ darkMode ? 'dark_mode' : 'light_mode' }}</span>
+          <span>Modo oscuro</span>
+        </div>
+        <div class="toggle" [class.active]="darkMode">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+      <button class="logout-btn" (click)="logout()">
+        <span class="material-icons-round">logout</span>
+        Cerrar Sesión
+      </button>
+    </div>
+
+    <!-- Purchase History -->
+    <div class="history-card">
+      <h3>Historial de Compras</h3>
+      <div class="history-list" *ngIf="purchaseHistory.length > 0">
+        <div *ngFor="let order of purchaseHistory" class="history-item">
+          <div class="history-icon">
+            <span class="material-icons-round">receipt</span>
+          </div>
+          <div class="history-info">
+            <span class="history-items-text">{{ order.items.length }} producto(s)</span>
+            <span class="history-date">{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <span class="history-total">${{ order.total.toFixed(2) }}</span>
+        </div>
+      </div>
+      <div class="empty-history" *ngIf="purchaseHistory.length === 0">
+        <span class="material-icons-round">history</span>
+        <p>Sin historial de compras</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,6 +15,10 @@ export class AuthService {
   readonly userRole = computed(() => this.currentUser()?.role ?? null);
   readonly userName = computed(() => this.currentUser()?.name ?? '');
 
+  constructor() {
+    this.tryRestoreSession();
+  }
+
   login(email: string, password: string): { success: boolean; message: string } {
     const user = MOCK_USERS.find(u => u.email === email && u.password === password);
     if (!user) {
@@ -26,6 +30,31 @@ export class AuthService {
     this.currentUser.set(user);
     localStorage.setItem('cafe_user', JSON.stringify(user));
     return { success: true, message: `Bienvenido, ${user.name}` };
+  }
+
+  registerOrLoginClient(name: string, email: string, phone?: string): User {
+    const existing = MOCK_USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
+    if (existing) {
+      this.currentUser.set(existing);
+      localStorage.setItem('cafe_user', JSON.stringify(existing));
+      return existing;
+    }
+
+    const newUser: User = {
+      id: 'u_client_' + Date.now(),
+      name,
+      email,
+      password: 'client_password',
+      role: 'client',
+      avatar: 'person',
+      active: true,
+      createdAt: new Date()
+    };
+
+    MOCK_USERS.push(newUser);
+    this.currentUser.set(newUser);
+    localStorage.setItem('cafe_user', JSON.stringify(newUser));
+    return newUser;
   }
 
   logout(): void {

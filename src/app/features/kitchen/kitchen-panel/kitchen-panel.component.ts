@@ -56,19 +56,70 @@ export class KitchenPanelComponent {
       pending: 'preparing', preparing: 'ready', ready: 'delivered'
     };
     const next = flow[order.status];
-    if (next) {
-      this.orderService.updateOrderStatus(order.id, next);
-      if (next === 'ready') {
-        this.notifService.addNotification({
-          type: 'order_ready',
-          title: 'Pedido Listo',
-          message: `El pedido de la Mesa ${order.tableNumber} está listo para servir.`,
-          read: false,
-          targetUserId: order.waiterId,
-          orderId: order.id,
-          tableNumber: order.tableNumber
-        });
-      }
+    if (!next) return;
+
+    this.orderService.updateOrderStatus(order.id, next);
+
+    const isDineIn = order.tableNumber > 0;
+    const clientTarget = order.accountId || order.waiterId;
+
+    if (next === 'preparing') {
+      const msg = isDineIn ?
+        `¡Tu pedido en Mesa ${order.tableNumber} se está preparando en cocina!` :
+        `¡Tu pedido para llevar está en preparación en cocina!`;
+
+      this.notifService.addNotification({
+        type: 'new_order',
+        title: '👨‍🍳 Pedido en Preparación',
+        message: msg,
+        read: false,
+        targetUserId: clientTarget,
+        targetRole: 'client',
+        orderId: order.id,
+        tableNumber: order.tableNumber
+      });
+    } else if (next === 'ready') {
+      const msg = isDineIn ?
+        `¡Tu pedido está listo! Te lo llevamos de inmediato a la Mesa ${order.tableNumber}.` :
+        `¡Tu pedido está listo para entrega / recolección en mostrador!`;
+
+      // Notification for Client
+      this.notifService.addNotification({
+        type: 'order_ready',
+        title: '🎉 ¡Tu Pedido está Listo!',
+        message: msg,
+        read: false,
+        targetUserId: clientTarget,
+        targetRole: 'client',
+        orderId: order.id,
+        tableNumber: order.tableNumber
+      });
+
+      // Notification for Waiter / Reception
+      this.notifService.addNotification({
+        type: 'order_ready',
+        title: '🔔 Orden Lista en Cocina',
+        message: isDineIn ? `Mesa ${order.tableNumber} lista para servir.` : `Orden #${order.id} lista para entrega en mostrador.`,
+        read: false,
+        targetRole: 'waiter',
+        orderId: order.id,
+        tableNumber: order.tableNumber
+      });
+    } else if (next === 'delivered') {
+      const msg = isDineIn ?
+        `¡Tu pedido fue servido en Mesa ${order.tableNumber}! ¡Buen provecho!` :
+        `¡Tu pedido fue entregado exitosamente! ¡Gracias por elegir Café Aroma!`;
+
+      this.notifService.addNotification({
+        type: 'order_ready',
+        title: '✅ Pedido Entregado',
+        message: msg,
+        read: false,
+        targetUserId: clientTarget,
+        targetRole: 'client',
+        orderId: order.id,
+        tableNumber: order.tableNumber
+      });
     }
   }
 

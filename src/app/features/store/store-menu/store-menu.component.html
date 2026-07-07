@@ -1,0 +1,79 @@
+<div class="menu-page">
+  <!-- Header -->
+  <div class="menu-header">
+    <h1>Nuestro Menú</h1>
+    <p>Encuentra tu bebida o platillo favorito</p>
+  </div>
+
+  <!-- Search -->
+  <div class="menu-toolbar">
+    <div class="search-box">
+      <span class="material-icons-round search-icon">search</span>
+      <input type="text"
+             [(ngModel)]="searchQuery"
+             placeholder="Buscar productos..."
+             id="menu-search" />
+      <button *ngIf="searchQuery" class="clear-btn" (click)="searchQuery = ''">
+        <span class="material-icons-round">close</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="category-filters">
+    <button class="cat-filter"
+            [class.active]="!selectedCategory"
+            (click)="selectCategory('')">
+      <span class="material-icons-round">grid_view</span>
+      <span>Todos</span>
+    </button>
+    <button *ngFor="let cat of categories"
+            class="cat-filter"
+            [class.active]="selectedCategory === cat.id"
+            (click)="selectCategory(cat.id)"
+            [style.--cat-color]="cat.color">
+      <span class="material-icons-round">{{ cat.icon }}</span>
+      <span>{{ cat.name }}</span>
+    </button>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="products-grid" *ngIf="filteredProducts.length > 0">
+    <div *ngFor="let product of filteredProducts" class="product-card">
+      <a [routerLink]="['/store/product', product.id]" class="product-image-link">
+        <div class="product-image overflow-hidden relative h-48 bg-cafe-100 rounded-t-2xl flex items-center justify-center">
+          <img *ngIf="product.image.startsWith('http')" [src]="product.image" [alt]="product.name" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+          <span *ngIf="!product.image.startsWith('http')" class="material-icons-round text-5xl text-cafe-600">{{ product.image }}</span>
+        </div>
+      </a>
+      <div class="product-body">
+        <span class="product-category">{{ productService.getCategoryName(product.categoryId) }}</span>
+        <a [routerLink]="['/store/product', product.id]" class="product-name-link">
+          <h3>{{ product.name }}</h3>
+        </a>
+        <p class="product-desc">{{ product.description }}</p>
+        <div class="product-bottom">
+          <span class="product-price">${{ product.price.toFixed(2) }}</span>
+          <div class="product-actions">
+            <a [routerLink]="['/store/product', product.id]" class="btn-detail" title="Ver detalle">
+              <span class="material-icons-round">visibility</span>
+            </a>
+            <button class="btn-add"
+                    [class.added]="addedProductId === product.id"
+                    (click)="quickAdd(product)">
+              <span class="material-icons-round">{{ addedProductId === product.id ? 'check' : 'add_shopping_cart' }}</span>
+              <span>{{ addedProductId === product.id ? '¡Agregado!' : 'Agregar' }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filteredProducts.length === 0">
+    <span class="material-icons-round empty-icon">search_off</span>
+    <h3>No se encontraron productos</h3>
+    <p>Intenta con otra búsqueda o categoría</p>
+  </div>
+</div>

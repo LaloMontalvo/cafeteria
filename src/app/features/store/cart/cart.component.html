@@ -1,0 +1,91 @@
+<div class="cart-page">
+  <h1>
+    <span class="material-icons-round">shopping_cart</span>
+    Carrito de Compras
+  </h1>
+
+  <!-- Empty State -->
+  <div class="empty-cart" *ngIf="cart.isEmpty()">
+    <span class="material-icons-round empty-icon">remove_shopping_cart</span>
+    <h3>Tu carrito está vacío</h3>
+    <p>Agrega productos desde nuestro menú para empezar</p>
+    <a routerLink="/store/menu" class="btn-primary">
+      <span class="material-icons-round">restaurant_menu</span>
+      Ver Menú
+    </a>
+  </div>
+
+  <!-- Cart Content -->
+  <div class="cart-grid" *ngIf="!cart.isEmpty()">
+    <!-- Items List -->
+    <div class="cart-items">
+      <div *ngFor="let item of cart.cartItems(); let i = index" class="cart-item">
+        <div class="item-icon overflow-hidden relative w-16 h-16 bg-cafe-100 rounded-2xl flex items-center justify-center shrink-0 border border-cafe-200">
+          <img *ngIf="item.image && item.image.startsWith('http')" [src]="item.image" [alt]="item.productName" class="w-full h-full object-cover" />
+          <span *ngIf="!item.image || !item.image.startsWith('http')" class="material-icons-round text-2xl text-cafe-600">{{ item.image || 'coffee' }}</span>
+        </div>
+        <div class="item-info">
+          <h3>{{ item.productName }}</h3>
+          <p class="item-options" *ngIf="item.options.length > 0">
+            {{ item.options.join(', ') }}
+          </p>
+          <p class="item-notes" *ngIf="item.notes">📝 {{ item.notes }}</p>
+          <span class="item-unit-price">${{ item.price.toFixed(2) }} c/u</span>
+        </div>
+        <div class="item-controls">
+          <div class="qty-control">
+            <button (click)="decrement(i)">
+              <span class="material-icons-round">remove</span>
+            </button>
+            <span class="qty">{{ item.quantity }}</span>
+            <button (click)="increment(i)">
+              <span class="material-icons-round">add</span>
+            </button>
+          </div>
+          <span class="item-subtotal">${{ (item.price * item.quantity).toFixed(2) }}</span>
+          <button class="remove-btn" (click)="remove(i)" title="Eliminar">
+            <span class="material-icons-round">delete_outline</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- General Notes -->
+      <div class="general-notes">
+        <label for="general-notes">Notas generales del pedido</label>
+        <textarea id="general-notes"
+                  [(ngModel)]="generalNotes"
+                  placeholder="Instrucciones especiales para tu pedido..."
+                  rows="3"></textarea>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="cart-summary">
+      <div class="summary-card">
+        <h3>Resumen del Pedido</h3>
+        <div class="summary-row">
+          <span>Productos ({{ cart.itemCount() }})</span>
+          <span>${{ cart.subtotal().toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+          <span>IVA (16%)</span>
+          <span>${{ cart.tax().toFixed(2) }}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span>${{ cart.total().toFixed(2) }}</span>
+        </div>
+
+        <a routerLink="/store/checkout" class="btn-checkout">
+          <span class="material-icons-round">shopping_bag</span>
+          Finalizar Pedido
+        </a>
+        <a routerLink="/store/menu" class="btn-continue">
+          <span class="material-icons-round">arrow_back</span>
+          Continuar Comprando
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
