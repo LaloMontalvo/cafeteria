@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
@@ -21,6 +21,13 @@ interface Combo {
   items: ComboItem[];
 }
 
+interface CarouselItem {
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+}
+
 @Component({
   selector: 'app-landing',
   standalone: true,
@@ -29,7 +36,48 @@ interface Combo {
   styleUrl: './landing.component.css'
 })
 export class LandingComponent {
+  @ViewChild('slider', { static: false }) sliderRef!: ElementRef;
+
   addedCombo = signal<string | null>(null);
+
+  carouselItems: CarouselItem[] = [
+    {
+      title: 'Aroma Intenso',
+      description: 'Granos de altura 100% arábiga seleccionados y tostados artesanalmente para lograr el espresso perfecto.',
+      image: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=1200&q=80',
+      link: '/store/menu'
+    },
+    {
+      title: 'Dulce Deleite',
+      description: 'Disfruta de nuestro bizcocho ultra húmedo de chocolate belga y postres recién horneados hoy.',
+      image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=80',
+      link: '/store/menu'
+    },
+    {
+      title: 'Moka Gourmet',
+      description: 'Una deliciosa y refrescante mezcla helada de espresso y chocolate belga con crema batida.',
+      image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=1200&q=80',
+      link: '/store/menu'
+    },
+    {
+      title: 'Panini Caprese',
+      description: 'Pan baguette crujiente con mozzarella fresca, jitomates y pesto artesanal de albahaca.',
+      image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=1200&q=80',
+      link: '/store/menu'
+    },
+    {
+      title: 'Frutos del Bosque',
+      description: 'Cremoso cheesecake estilo Nueva York sobre galleta crujiente con delicioso coulis de frutos rojos.',
+      image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=1200&q=80',
+      link: '/store/menu'
+    },
+    {
+      title: 'Chai Especiado',
+      description: 'Té negro aromático con infusión de jengibre, cardamomo, canela y cremosa leche vaporizada.',
+      image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1200&q=80',
+      link: '/store/menu'
+    }
+  ];
 
   combos: Combo[] = [
     {
@@ -139,5 +187,23 @@ export class LandingComponent {
 
     this.addedCombo.set(combo.name);
     setTimeout(() => this.addedCombo.set(null), 3000);
+  }
+
+  next(): void {
+    if (!this.sliderRef) return;
+    const slider = this.sliderRef.nativeElement;
+    const items = slider.querySelectorAll('.item');
+    if (items.length > 0) {
+      slider.appendChild(items[0]);
+    }
+  }
+
+  prev(): void {
+    if (!this.sliderRef) return;
+    const slider = this.sliderRef.nativeElement;
+    const items = slider.querySelectorAll('.item');
+    if (items.length > 0) {
+      slider.insertBefore(items[items.length - 1], items[0]);
+    }
   }
 }

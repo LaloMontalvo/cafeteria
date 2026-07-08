@@ -1,52 +1,24 @@
-<!-- Hero Banner -->
-<section class="hero">
-  <div class="hero-bg">
-    <div class="hero-circle hero-circle-1"></div>
-    <div class="hero-circle hero-circle-2"></div>
-    <div class="hero-circle hero-circle-3"></div>
-  </div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="material-icons-round">local_cafe</span>
-      <span>Café de especialidad</span>
-    </div>
-    <h1>Bienvenido a <span class="highlight">Café Aroma</span></h1>
-    <p class="hero-subtitle">Descubre el mejor café artesanal de la ciudad. Bebidas preparadas con pasión, ingredientes frescos y un ambiente inigualable.</p>
-    <div class="hero-actions">
-      <a routerLink="/store/menu" class="btn-primary">
-        <span class="material-icons-round">restaurant_menu</span> Ver Menú
-      </a>
-      <a routerLink="/store/menu" class="btn-secondary">
-        <span class="material-icons-round">shopping_bag</span> Ordenar Ahora
-      </a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat">
-        <strong>500+</strong>
-        <span>Clientes felices</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <strong>17</strong>
-        <span>Productos únicos</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <strong>4.9★</strong>
-        <span>Calificación</span>
-      </div>
-    </div>
-  </div>
-  <div class="hero-visual flex items-center justify-center">
-    <div class="relative w-full max-w-md h-72 rounded-3xl overflow-hidden shadow-2xl border-4 border-white/30 group">
-      <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80" alt="Café Aroma Experience" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 text-white">
-        <span class="bg-amber-600/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold w-max mb-2">100% Granos de Especialidad</span>
-        <h3 class="text-xl font-bold font-serif m-0">Café Artesanal Recién Tostado</h3>
-        <p class="text-xs text-amber-100 m-0 mt-1">Granos de altura cultivados en Chiapas y Oaxaca.</p>
-      </div>
-    </div>
-  </div>
+<!-- Hero Carousel Banner -->
+<section class="hero-carousel-section">
+  <main class="carousel-main">
+    <ul class="slider" #slider>
+      <li class="item" *ngFor="let item of carouselItems" [style.backgroundImage]="'url(' + item.image + ')'">
+        <div class="content">
+          <h2 class="title">{{ item.title }}</h2>
+          <p class="description">{{ item.description }}</p>
+          <button [routerLink]="item.link" class="btn-carousel-more">Ver Menú</button>
+        </div>
+      </li>
+    </ul>
+    <nav class="nav">
+      <span class="btn prev" (click)="prev()">
+        <span class="material-icons-round">arrow_back</span>
+      </span>
+      <span class="btn next" (click)="next()">
+        <span class="material-icons-round">arrow_forward</span>
+      </span>
+    </nav>
+  </main>
 </section>
 
 <!-- Weather Recommendation Section for Clients -->
