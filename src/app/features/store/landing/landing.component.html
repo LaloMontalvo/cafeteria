@@ -55,8 +55,63 @@
     <app-weather-recommendation></app-weather-recommendation>
   </div>
 </section>
+<!-- ═══════════════════════════════════════════
+     Combos — Nuestros Combos
+     ═══════════════════════════════════════════ -->
+<section class="section combos-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="combos-title-badge">
+        <span class="material-icons-round">restaurant_menu</span>
+        <span>ARMA TU EXPERIENCIA</span>
+      </div>
+      <h2>Nuestros Combos</h2>
+      <p>Combinaciones pensadas para que disfrutes lo mejor de Café Aroma</p>
+    </div>
 
-<!-- Categories -->
+    <!-- Toast de combo agregado -->
+    <div *ngIf="addedCombo()" class="combo-toast">
+      <span class="material-icons-round">check_circle</span>
+      ¡{{ addedCombo() }} agregado al carrito!
+    </div>
+
+    <div class="combos-grid">
+      <div *ngFor="let combo of combos" class="combo-card">
+        <div class="combo-image-wrap">
+          <img [src]="combo.image" [alt]="combo.name" loading="lazy" />
+          <div class="combo-tag-badge">
+            <span class="material-icons-round">{{ combo.tagIcon }}</span>
+            {{ combo.tag }}
+          </div>
+        </div>
+        <div class="combo-body">
+          <h3 class="combo-name">{{ combo.name }}</h3>
+          <p class="combo-desc">{{ combo.description }}</p>
+          <div class="combo-includes">
+            <span class="combo-includes-label">Incluye:</span>
+            <div class="combo-items-list">
+              <span class="combo-item" *ngFor="let item of combo.items">
+                <span class="material-icons-round">{{ item.icon }}</span>
+                {{ item.name }}
+              </span>
+            </div>
+          </div>
+          <div class="combo-footer">
+            <div class="combo-price-wrap">
+              <span class="combo-price">${{ combo.price }}</span>
+            </div>
+            <button (click)="addComboToCart(combo)" class="btn-combo-add">
+              <span class="material-icons-round">add_shopping_cart</span>
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <section class="section categories-section">
   <div class="section-inner">
     <div class="section-header">

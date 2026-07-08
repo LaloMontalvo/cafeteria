@@ -37,7 +37,7 @@ export class WeatherService {
   private productService = inject(ProductService);
 
   // ApiKey configurable (el usuario o dev puede cambiarla si tiene una propia)
-  private apiKey = signal<string>('c8309101d248b610c550dfbe8e0c6553'); // API key pública demo/fallback de prueba
+  private apiKey = signal<string>('2caa7ce736883da740fc2c85c463583d');
   
   readonly currentWeather = signal<WeatherData | null>(this.generateMockWeather('Ciudad de México'));
   readonly loading = signal<boolean>(false);

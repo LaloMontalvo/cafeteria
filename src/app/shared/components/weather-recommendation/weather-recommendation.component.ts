@@ -65,16 +65,41 @@ export class WeatherRecommendationComponent implements OnInit {
   cartService = inject(CartService);
 
   nearbyCities = signal<NearbyCity[]>([]);
-  customApiKey = '';
-  showKeyModal = false;
   addedMessage = signal<string | null>(null);
   locationLoading = signal<boolean>(false);
   userCoords = signal<{ lat: number; lon: number } | null>(null);
+  showLocationModal = signal<boolean>(false);
+  locationDenied = signal<boolean>(false);
 
   ngOnInit(): void {
-    this.customApiKey = this.weatherService.getApiKey();
-    // Auto-detectar ubicación del usuario al iniciar
+    const alreadyAsked = sessionStorage.getItem('location_asked');
+    if (alreadyAsked) {
+      // Ya se pidió ubicación en esta sesión, obtener silenciosamente
+      this.useMyLocation();
+    } else {
+      // Primera vez: mostrar modal
+      this.showLocationModal.set(true);
+    }
+  }
+
+  /** El usuario aceptó activar su ubicación */
+  acceptLocation(): void {
+    this.showLocationModal.set(false);
+    sessionStorage.setItem('location_asked', 'true');
     this.useMyLocation();
+  }
+
+  /** El usuario rechazó activar su ubicación */
+  declineLocation(): void {
+    this.showLocationModal.set(false);
+    sessionStorage.setItem('location_asked', 'true');
+    this.locationDenied.set(true);
+    // Usar fallback Ciudad de México
+    const fallbackLat = 19.4326;
+    const fallbackLon = -99.1332;
+    this.userCoords.set({ lat: fallbackLat, lon: fallbackLon });
+    this.weatherService.fetchWeatherByCoords(fallbackLat, fallbackLon);
+    this.calculateNearbyCities(fallbackLat, fallbackLon);
   }
 
   onCitySelect(city: NearbyCity): void {
@@ -180,15 +205,6 @@ export class WeatherRecommendationComponent implements OnInit {
     return '☕ Recomendación del Chef';
   }
 
-  saveApiKey(): void {
-    this.weatherService.setApiKey(this.customApiKey.trim());
-    this.showKeyModal = false;
-    // Recargar clima con la nueva API key
-    const coords = this.userCoords();
-    if (coords) {
-      this.weatherService.fetchWeatherByCoords(coords.lat, coords.lon);
-    }
-  }
 
   quickOrder(product: Product): void {
     // Añadir al carrito del cliente

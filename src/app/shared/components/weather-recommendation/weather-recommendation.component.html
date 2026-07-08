@@ -1,3 +1,40 @@
+<!-- Modal de Permiso de Ubicación -->
+<div class="location-modal-overlay" *ngIf="showLocationModal()">
+  <div class="location-modal">
+    <div class="location-modal-icon-wrap">
+      <div class="location-modal-pulse"></div>
+      <span class="material-icons-round location-modal-icon">location_on</span>
+    </div>
+    <h3 class="location-modal-title">Activa tu ubicación</h3>
+    <p class="location-modal-desc">
+      Para ofrecerte las mejores recomendaciones de bebidas y comidas según el clima de tu zona, necesitamos acceder a tu ubicación.
+    </p>
+    <div class="location-modal-features">
+      <div class="location-feature">
+        <span class="material-icons-round">thermostat</span>
+        <span>Clima en tiempo real</span>
+      </div>
+      <div class="location-feature">
+        <span class="material-icons-round">restaurant</span>
+        <span>Sugerencias personalizadas</span>
+      </div>
+      <div class="location-feature">
+        <span class="material-icons-round">near_me</span>
+        <span>Ciudades cercanas</span>
+      </div>
+    </div>
+    <div class="location-modal-actions">
+      <button (click)="acceptLocation()" class="btn-accept-location">
+        <span class="material-icons-round">my_location</span>
+        Activar Ubicación
+      </button>
+      <button (click)="declineLocation()" class="btn-decline-location">
+        Continuar sin ubicación
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="weather-recommendation-wrapper" *ngIf="weatherService.currentWeather() as weather">
   
   <!-- Header Control Bar -->
@@ -17,11 +54,6 @@
       <button (click)="useMyLocation()" class="btn-gps" [class.loading]="locationLoading()" title="Actualizar mi ubicación actual">
         <span class="material-icons-round" [class.spin]="locationLoading()">{{ locationLoading() ? 'sync' : 'my_location' }}</span>
         <span class="gps-text">{{ locationLoading() ? 'Localizando...' : 'Mi Ubicación' }}</span>
-      </button>
-
-      <!-- API Key config button -->
-      <button (click)="showKeyModal = true" class="btn-config" title="Configurar API Key de OpenWeather">
-        <span class="material-icons-round">key</span>
       </button>
     </div>
   </div>
@@ -145,30 +177,6 @@
         <p>No hay productos registrados en esta categoría en este momento.</p>
       </div>
     </ng-template>
-  </div>
-
-  <!-- API Key Modal -->
-  <div class="modal-overlay" *ngIf="showKeyModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h5>Configurar API Key de OpenWeatherMap</h5>
-        <button (click)="showKeyModal = false" class="btn-close">
-          <span class="material-icons-round">close</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Ingresa tu API Key personal de OpenWeatherMap si deseas consultar clima en tiempo real.</p>
-        <div class="form-group">
-          <label>API Key:</label>
-          <input type="text" [(ngModel)]="customApiKey" placeholder="Ej: c8309101d248b610c550..." class="modal-input" />
-        </div>
-        <p class="help-text">Si no tienes una API Key o la dejas por defecto, el sistema usará el simulador inteligente de clima en tiempo real.</p>
-      </div>
-      <div class="modal-footer">
-        <button (click)="showKeyModal = false" class="btn-cancel">Cancelar</button>
-        <button (click)="saveApiKey()" class="btn-save">Guardar y Aplicar</button>
-      </div>
-    </div>
   </div>
 
 </div>

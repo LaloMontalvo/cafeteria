@@ -1,3 +1,179 @@
+/* ==========================================
+   Location Permission Modal
+   ========================================== */
+.location-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(45, 27, 14, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.location-modal {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 40px 36px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  animation: modalSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalSlideUp {
+  from {
+    transform: translateY(40px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.location-modal-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+.location-modal-pulse {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(111, 78, 55, 0.15);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.4); opacity: 0; }
+}
+
+.location-modal-icon {
+  font-size: 42px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #6F4E37, #A07855);
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: 0 6px 20px rgba(111, 78, 55, 0.35);
+}
+
+.location-modal-title {
+  margin: 0 0 10px 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #2D1B0E;
+}
+
+.location-modal-desc {
+  margin: 0 0 24px 0;
+  font-size: 0.92rem;
+  color: #7A6455;
+  line-height: 1.55;
+}
+
+.location-modal-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.location-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #F9F5F0;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #2D1B0E;
+}
+
+.location-feature .material-icons-round {
+  font-size: 20px;
+  color: #6F4E37;
+}
+
+.location-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-accept-location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #6F4E37, #8B6544);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(111, 78, 55, 0.3);
+}
+
+.btn-accept-location:hover {
+  background: linear-gradient(135deg, #543A27, #6F4E37);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(111, 78, 55, 0.4);
+}
+
+.btn-accept-location .material-icons-round {
+  font-size: 20px;
+}
+
+.btn-decline-location {
+  width: 100%;
+  padding: 10px 20px;
+  background: transparent;
+  color: #8C7565;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-decline-location:hover {
+  background: #F4EBE2;
+  color: #6F4E37;
+}
+
+/* ==========================================
+   Main Wrapper
+   ========================================== */
 .weather-recommendation-wrapper {
   display: flex;
   flex-direction: column;
